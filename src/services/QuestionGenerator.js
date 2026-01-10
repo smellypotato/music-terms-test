@@ -2,6 +2,7 @@ import musicTerms from '../data/musicTerms.json'
 import questionFormats from '../data/questionFormats.json'
 import orderingData from '../data/orderingData.json'
 import compareTerms from '../data/compareTerms.json'
+import levels from '../data/levels.json'
 import { getCanonicalTerm, getRandomAlias, termsMatch, hasAlias } from '../utils/termUtils'
 
 /**
@@ -13,6 +14,7 @@ class QuestionGenerator {
     this.questionFormats = questionFormats
     this.orderingData = orderingData
     this.compareTerms = compareTerms
+    this.levels = levels
   }
 
   /**
@@ -23,9 +25,13 @@ class QuestionGenerator {
    * @returns {Array} Array of generated questions
    */
   generateQuestions(config) {
-    const { numQuestions, selectedTags, selectedGrade = 0 } = config
+    const { numQuestions, selectedTags, selectedGrade = 0, selectedLevel = 'beginner' } = config
     const languageSelected = selectedTags.includes('Language')
     const otherTags = selectedTags.filter(tag => tag !== 'Language')
+    
+    // Get allowed question types for the selected level
+    const levelConfig = this.levels[selectedLevel] || this.levels.beginner
+    const allowedQuestionTypes = levelConfig.questionTypes
     
     // Create grade-filtered terms for MC options (all terms, regardless of tags)
     const gradeFilteredTerms = this.musicTerms.filter(term => {
@@ -60,8 +66,12 @@ class QuestionGenerator {
     const generatedQuestions = []
     const usedTerms = new Set()
 
-    // Get applicable question formats based on selected tags
+    // Get applicable question formats based on selected tags and level
     const applicableFormats = this.questionFormats.filter(format => {
+      // First, check if the format's type is allowed for the selected level
+      if (!allowedQuestionTypes.includes(format.type)) {
+        return false
+      }
       // For language-specific formats, check if Language tag is selected
       if (format.applicableTags.includes('Language')) {
         return languageSelected
@@ -80,6 +90,9 @@ class QuestionGenerator {
         // Use termsWithLanguage for language-specific questions, otherwise use availableTerms
         const termsToUse = format.applicableTags.includes('Language') ? termsWithLanguage : availableTerms
         question = this.generateQuestionByFormat(format, termsToUse, usedTerms, selectedTags, gradeFilteredTerms)
+        if (question) {
+          question.formatId = format.id
+        }
         attempts++
       }
 
@@ -525,7 +538,9 @@ class QuestionGenerator {
       question: questionText,
       options: options.map(t => getRandomAlias(t)),
       correctAnswer: correctAnswerAlias,
-      correctTerm: correctAnswerCanonical
+      correctTerm: correctAnswerCanonical,
+      questionTerm: displayAlias,
+      questionTermCanonical: canonicalTerm
     }
   }
 
@@ -573,7 +588,9 @@ class QuestionGenerator {
       question: questionText,
       options,
       correctAnswer: oppositeDisplayAlias,
-      correctTerm: getCanonicalTerm(oppositeTerm)
+      correctTerm: getCanonicalTerm(oppositeTerm),
+      questionTerm: displayAlias,
+      questionTermCanonical: getCanonicalTerm(term)
     }
   }
 
@@ -734,7 +751,8 @@ class QuestionGenerator {
       question: questionText,
       options,
       correctAnswer: language,
-      correctTerm: canonicalTerm
+      correctTerm: canonicalTerm,
+      questionTerm: displayAlias
     }
   }
 

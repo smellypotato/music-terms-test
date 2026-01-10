@@ -1,0 +1,12 @@
+{
+  "beginner": {
+    "questionTypes": ["multiple_choice"]
+  },
+  "intermediate": {
+    "questionTypes": ["multiple_choice", "ordering"]
+  },
+  "advanced": {
+    "questionTypes": ["multiple_choice", "ordering", "short_answer"]
+  }
+}
+

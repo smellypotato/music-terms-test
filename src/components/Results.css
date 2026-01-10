@@ -205,6 +205,13 @@
   font-style: italic;
 }
 
+.inline-definition {
+  color: #6c757d;
+  font-size: 0.9rem;
+  font-style: italic;
+  margin-left: 4px;
+}
+
 .results-actions {
   text-align: center;
   padding-top: 30px;

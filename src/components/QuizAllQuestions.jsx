@@ -90,6 +90,51 @@ function QuizAllQuestions({ questions, answers, onAnswerChange, onSubmit, select
     })
   }, [questions, answers])
 
+  // Initialize answers for ordering questions that don't have an answer yet
+  useEffect(() => {
+    const updates = []
+    
+    questions.forEach((question, index) => {
+      if (question.type === 'ordering') {
+        const currentAnswer = answers[index]
+        const termIds = question.termIds || []
+        
+        // If no answer exists, initialize with the current ordering state or create a random order
+        if (!currentAnswer || !currentAnswer.trim()) {
+          let order = orderingStates[index]
+          
+          // If ordering state doesn't exist yet or is invalid, create a random order
+          if (!order || order.length !== termIds.length) {
+            order = [...termIds].sort(() => Math.random() - 0.5)
+            // Only update if this state doesn't exist (to avoid infinite loops)
+            if (!orderingStates[index]) {
+              updates.push({ index, order })
+            }
+          }
+          
+          // Initialize the answer with the order
+          if (order && order.length === termIds.length) {
+            handleAnswer(index, order.join(','))
+          }
+        }
+      }
+    })
+    
+    // Batch update ordering states to avoid multiple re-renders
+    if (updates.length > 0) {
+      setOrderingStates(prev => {
+        const newStates = { ...prev }
+        updates.forEach(({ index, order }) => {
+          if (!newStates[index]) {
+            newStates[index] = order
+          }
+        })
+        return newStates
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [questions, orderingStates])
+
   const renderQuestion = (question, index) => {
     const currentAnswer = answers[index]
 

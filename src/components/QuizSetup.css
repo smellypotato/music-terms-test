@@ -24,7 +24,8 @@
 }
 
 .number-input,
-.grade-select {
+.grade-select,
+.level-select {
   padding: 12px;
   font-size: 1rem;
   border: 2px solid #ddd;
@@ -36,7 +37,8 @@
 }
 
 .number-input:focus,
-.grade-select:focus {
+.grade-select:focus,
+.level-select:focus {
   outline: none;
   border-color: #667eea;
 }

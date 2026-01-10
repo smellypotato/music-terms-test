@@ -17,6 +17,7 @@ function QuizSetup({ onStartQuiz }) {
   const [numQuestions, setNumQuestions] = useState(10)
   const [selectedTags, setSelectedTags] = useState(ALL_TAGS)
   const [selectedGrade, setSelectedGrade] = useState(0)
+  const [selectedLevel, setSelectedLevel] = useState('beginner')
 
   const handleTagToggle = (tag) => {
     setSelectedTags(prev => 
@@ -44,7 +45,7 @@ function QuizSetup({ onStartQuiz }) {
       alert('Please enter a number of questions between 1 and 100.')
       return
     }
-    onStartQuiz({ numQuestions, selectedTags, selectedGrade })
+    onStartQuiz({ numQuestions, selectedTags, selectedGrade, selectedLevel })
   }
 
   return (
@@ -63,6 +64,22 @@ function QuizSetup({ onStartQuiz }) {
             onChange={(e) => setNumQuestions(parseInt(e.target.value) || 1)}
             className="number-input"
           />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="selectedLevel">
+            Level:
+          </label>
+          <select
+            id="selectedLevel"
+            value={selectedLevel}
+            onChange={(e) => setSelectedLevel(e.target.value)}
+            className="level-select"
+          >
+            <option value="beginner">Beginner</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="advanced">Advanced</option>
+          </select>
         </div>
 
         <div className="form-group">
