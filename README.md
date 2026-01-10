@@ -1,16 +1,72 @@
-# React + Vite
+# Music Terms Quiz
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React-based quiz application for testing knowledge of musical terms. Features include:
 
-Currently, two official plugins are available:
+- Multiple question types (multiple choice, short answer, ordering, etc.)
+- Tag-based filtering (Tempo, Dynamics, Style/Expression, etc.)
+- Printable version with PDF export
+- Answer key generation
+- All questions on one page for easy review
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## React Compiler
+- **Varied Question Types**: 
+  - Term to definition (MC and short answer)
+  - Definition to term (MC and short answer)
+  - Tempo ordering (slowest to fastest)
+  - Dynamics ordering (softest to loudest)
+  - Similar terms comparison
+  - Opposite terms
+  - Tag classification
+  - Context application
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Term Aliases**: Each term can have multiple aliases that are randomly displayed
 
-## Expanding the ESLint configuration
+- **Print-Friendly**: Export quizzes and answer keys as PDF
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Setup
+
+```bash
+npm install
+npm run dev
+```
+
+## Build
+
+```bash
+npm run build
+```
+
+## GitHub Pages
+
+This app is configured for GitHub Pages deployment. The site will be automatically deployed when you push to the `main` branch.
+
+### Manual Setup (if needed):
+
+1. Go to your repository settings on GitHub
+2. Navigate to "Pages" in the left sidebar
+3. Under "Source", select "GitHub Actions"
+4. The site will be available at: `https://smellypotato.github.io/music-terms-test/`
+
+## Project Structure
+
+```
+src/
+├── components/          # React components
+│   ├── QuizSetup.jsx    # Quiz configuration
+│   ├── QuizAllQuestions.jsx  # All questions view
+│   ├── PrintableQuiz.jsx     # Print-friendly version
+│   └── Results.jsx      # Results display
+├── data/                # JSON data files
+│   ├── musicTerms.json  # Music terms and definitions
+│   ├── questionFormats.json  # Question format definitions
+│   └── orderingData.json     # Ordering rules
+├── services/            # Business logic
+│   └── QuestionGenerator.js  # Question generation service
+└── utils/              # Utility functions
+    └── termUtils.js    # Term manipulation utilities
+```
+
+## License
+
+MIT
