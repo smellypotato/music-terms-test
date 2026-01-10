@@ -74,6 +74,8 @@ function App() {
             answers={answers}
             onAnswerChange={handleAnswerChange}
             onSubmit={handleSubmitQuiz}
+            selectedTags={quizConfig?.selectedTags || []}
+            onBack={handleReset}
           />
         </>
       )}

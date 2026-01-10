@@ -1,10 +1,67 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './QuizAllQuestions.css'
+import Cheatsheet from './Cheatsheet'
 
-function QuizAllQuestions({ questions, answers, onAnswerChange, onSubmit }) {
+function QuizAllQuestions({ questions, answers, onAnswerChange, onSubmit, selectedTags = [], onBack }) {
+  const [showCheatsheet, setShowCheatsheet] = useState(false)
+  const [orderingStates, setOrderingStates] = useState({})
+  
   const handleAnswer = (questionIndex, answer) => {
     onAnswerChange(questionIndex, answer)
   }
+  
+  const getOrderingState = (questionIndex, termIds, currentAnswer) => {
+    if (orderingStates[questionIndex]) {
+      return orderingStates[questionIndex]
+    }
+    // Initialize with current answer or random order
+    if (currentAnswer && currentAnswer.trim()) {
+      const order = currentAnswer.split(',').map(id => id.trim()).filter(id => id)
+      if (order.length === termIds.length) {
+        return order
+      }
+    }
+    // Return shuffled termIds
+    return [...termIds].sort(() => Math.random() - 0.5)
+  }
+  
+  const updateOrderingState = (questionIndex, newOrder) => {
+    setOrderingStates(prev => ({
+      ...prev,
+      [questionIndex]: newOrder
+    }))
+  }
+  
+  // Initialize ordering states for all ordering questions
+  useEffect(() => {
+    setOrderingStates(prev => {
+      const newStates = { ...prev }
+      let hasChanges = false
+      
+      questions.forEach((question, index) => {
+        if (question.type === 'ordering' && !newStates[index]) {
+          const termIds = question.termIds || []
+          const currentAnswer = answers[index]
+          
+          // Initialize with current answer or random order
+          let order
+          if (currentAnswer && currentAnswer.trim()) {
+            order = currentAnswer.split(',').map(id => id.trim()).filter(id => id)
+            if (order.length !== termIds.length) {
+              order = [...termIds].sort(() => Math.random() - 0.5)
+            }
+          } else {
+            order = [...termIds].sort(() => Math.random() - 0.5)
+          }
+          
+          newStates[index] = order
+          hasChanges = true
+        }
+      })
+      
+      return hasChanges ? newStates : prev
+    })
+  }, [questions, answers])
 
   const renderQuestion = (question, index) => {
     const currentAnswer = answers[index]
@@ -55,50 +112,31 @@ function QuizAllQuestions({ questions, answers, onAnswerChange, onSubmit }) {
       case 'ordering':
         const termIds = question.termIds || []
         const displayMap = question.displayMap || {}
-        const currentOrder = currentAnswer ? currentAnswer.split(',').map(id => id.trim()).filter(id => id) : []
+        const order = getOrderingState(index, termIds, currentAnswer)
         
-        const handleOrderChange = (termId, action) => {
-          let newOrder = [...currentOrder]
-          const currentIndex = currentOrder.indexOf(termId)
-          const isInOrder = currentIndex !== -1
-          
-          if (isInOrder) {
-            newOrder = newOrder.filter(id => id !== termId)
+        // Determine ordering type from question text
+        const isTempo = question.question.toLowerCase().includes('tempo') || 
+                       question.question.toLowerCase().includes('slowest') || 
+                       question.question.toLowerCase().includes('fastest')
+        const isDynamics = question.question.toLowerCase().includes('dynamics') || 
+                          question.question.toLowerCase().includes('softest') || 
+                          question.question.toLowerCase().includes('loudest')
+        
+        const leftLabel = isTempo ? 'Slowest' : isDynamics ? 'Softest' : 'Lowest'
+        const rightLabel = isTempo ? 'Fastest' : isDynamics ? 'Loudest' : 'Highest'
+        
+        const handleSwap = (containerIndex, direction) => {
+          const newOrder = [...order]
+          if (direction === 'left' && containerIndex > 0) {
+            // Swap with left container
+            [newOrder[containerIndex], newOrder[containerIndex - 1]] = 
+            [newOrder[containerIndex - 1], newOrder[containerIndex]]
+          } else if (direction === 'right' && containerIndex < newOrder.length - 1) {
+            // Swap with right container
+            [newOrder[containerIndex], newOrder[containerIndex + 1]] = 
+            [newOrder[containerIndex + 1], newOrder[containerIndex]]
           }
-          
-          switch (action) {
-            case 'top':
-              newOrder.unshift(termId)
-              break
-            case 'up':
-              if (isInOrder && currentIndex > 0) {
-                newOrder.splice(currentIndex - 1, 0, termId)
-              } else if (!isInOrder) {
-                newOrder.unshift(termId)
-              } else {
-                newOrder.unshift(termId)
-              }
-              break
-            case 'down':
-              if (isInOrder && currentIndex < currentOrder.length - 1) {
-                newOrder.splice(currentIndex + 1, 0, termId)
-              } else if (!isInOrder) {
-                newOrder.push(termId)
-              } else {
-                newOrder.push(termId)
-              }
-              break
-            case 'bottom':
-              newOrder.push(termId)
-              break
-            case 'remove':
-              break
-            default:
-              if (!isInOrder) {
-                newOrder.push(termId)
-              }
-          }
-          
+          updateOrderingState(index, newOrder)
           handleAnswer(index, newOrder.join(','))
         }
         
@@ -107,73 +145,45 @@ function QuizAllQuestions({ questions, answers, onAnswerChange, onSubmit }) {
             <div className="question-number">{index + 1}.</div>
             <div className="question-content">
               <div className="question-text">{question.question}</div>
-              <div className="all-ordering-list">
-                {termIds.map((termId) => {
-                  const position = currentOrder.indexOf(termId)
-                  const displayIndex = position !== -1 ? position + 1 : null
-                  const displayName = displayMap[termId] || termId
-                  
-                  return (
-                    <div key={termId} className="all-ordering-item">
-                      <span className="order-number">
-                        {displayIndex ? `${displayIndex}.` : '—'}
-                      </span>
-                      <span className="order-term">{displayName}</span>
-                      <div className="order-buttons">
-                        <button
-                          type="button"
-                          onClick={() => handleOrderChange(termId, 'top')}
-                          className="order-btn"
-                        >
-                          ↑ Top
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleOrderChange(termId, 'up')}
-                          className="order-btn"
-                          disabled={position === 0}
-                        >
-                          ↑
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleOrderChange(termId, 'down')}
-                          className="order-btn"
-                          disabled={position === currentOrder.length - 1}
-                        >
-                          ↓
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleOrderChange(termId, 'bottom')}
-                          className="order-btn"
-                        >
-                          ↓ Bottom
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleOrderChange(termId, 'remove')}
-                          className="order-btn remove"
-                          disabled={position === -1}
-                        >
-                          Remove
-                        </button>
+              <div className="ordering-containers-wrapper">
+                <div className="ordering-label-left">{leftLabel}</div>
+                <div className="ordering-containers">
+                  {order.map((termId, containerIndex) => {
+                    const displayName = displayMap[termId] || termId
+                    const isLeftmost = containerIndex === 0
+                    const isRightmost = containerIndex === order.length - 1
+                    
+                    return (
+                      <div key={termId} className="ordering-container">
+                        {!isLeftmost && (
+                          <button
+                            type="button"
+                            onClick={() => handleSwap(containerIndex, 'left')}
+                            className="swap-button"
+                            title="Move left"
+                          >
+                            ←
+                          </button>
+                        )}
+                        <div className="ordering-term-display">
+                          {displayName}
+                        </div>
+                        {!isRightmost && (
+                          <button
+                            type="button"
+                            onClick={() => handleSwap(containerIndex, 'right')}
+                            className="swap-button"
+                            title="Move right"
+                          >
+                            →
+                          </button>
+                        )}
                       </div>
-                    </div>
-                  )
-                })}
-              </div>
-              {currentOrder.length > 0 && (
-                <div className="current-order-preview">
-                  <strong>Current order:</strong>{' '}
-                  {currentOrder.map((id, idx) => (
-                    <span key={id} className="order-preview-item">
-                      {idx + 1}. {displayMap[id] || id}
-                      {idx < currentOrder.length - 1 && ', '}
-                    </span>
-                  ))}
+                    )
+                  })}
                 </div>
-              )}
+                <div className="ordering-label-right">{rightLabel}</div>
+              </div>
             </div>
           </div>
         )
@@ -206,6 +216,32 @@ function QuizAllQuestions({ questions, answers, onAnswerChange, onSubmit }) {
           Submit Quiz
         </button>
       </div>
+
+      {onBack && (
+        <button
+          type="button"
+          onClick={onBack}
+          className="back-button"
+          title="Back to Setup"
+        >
+          ← Back
+        </button>
+      )}
+
+      <button
+        type="button"
+        onClick={() => setShowCheatsheet(true)}
+        className="cheatsheet-button"
+        title="Open Cheatsheet"
+      >
+        📚 Cheatsheet
+      </button>
+
+      <Cheatsheet
+        isOpen={showCheatsheet}
+        onClose={() => setShowCheatsheet(false)}
+        selectedTags={selectedTags}
+      />
     </div>
   )
 }

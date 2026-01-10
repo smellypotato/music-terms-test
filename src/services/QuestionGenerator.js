@@ -21,10 +21,35 @@ class QuestionGenerator {
    * @returns {Array} Array of generated questions
    */
   generateQuestions(config) {
-    const { numQuestions, selectedTags } = config
-    const availableTerms = this.musicTerms.filter(term => 
-      term.tags.some(tag => selectedTags.includes(tag))
-    )
+    const { numQuestions, selectedTags, selectedGrade = 0 } = config
+    const languageSelected = selectedTags.includes('Language')
+    const otherTags = selectedTags.filter(tag => tag !== 'Language')
+    
+    // Create grade-filtered terms for MC options (all terms, regardless of tags)
+    const gradeFilteredTerms = this.musicTerms.filter(term => {
+      if (selectedGrade > 0) {
+        const termGrade = term.grade || 0
+        if (termGrade === 999 || termGrade > selectedGrade) {
+          return false
+        }
+      }
+      return true
+    })
+    
+    // Filter terms based on selected tags and grade (excluding Language for regular filtering)
+    const availableTerms = gradeFilteredTerms.filter(term => {
+      // Filter by tags
+      if (otherTags.length === 0) {
+        // No other tags selected - include all terms (after grade filtering)
+        return true
+      } else {
+        // Filter by other tags
+        return term.tags.some(tag => otherTags.includes(tag))
+      }
+    })
+
+    // For language questions, we need terms with languages
+    const termsWithLanguage = availableTerms.filter(term => this.getTermLanguage(term) !== null)
 
     if (availableTerms.length === 0) {
       return []
@@ -34,9 +59,14 @@ class QuestionGenerator {
     const usedTerms = new Set()
 
     // Get applicable question formats based on selected tags
-    const applicableFormats = this.questionFormats.filter(format =>
-      format.applicableTags.some(tag => selectedTags.includes(tag))
-    )
+    const applicableFormats = this.questionFormats.filter(format => {
+      // For language-specific formats, check if Language tag is selected
+      if (format.applicableTags.includes('Language')) {
+        return languageSelected
+      }
+      // For other formats, check if any of their applicable tags are selected
+      return format.applicableTags.some(tag => selectedTags.includes(tag))
+    })
 
     for (let i = 0; i < numQuestions; i++) {
       let question = null
@@ -45,7 +75,9 @@ class QuestionGenerator {
 
       while (!question && attempts < maxAttempts) {
         const format = applicableFormats[Math.floor(Math.random() * applicableFormats.length)]
-        question = this.generateQuestionByFormat(format, availableTerms, usedTerms, selectedTags)
+        // Use termsWithLanguage for language-specific questions, otherwise use availableTerms
+        const termsToUse = format.applicableTags.includes('Language') ? termsWithLanguage : availableTerms
+        question = this.generateQuestionByFormat(format, termsToUse, usedTerms, selectedTags, gradeFilteredTerms)
         attempts++
       }
 
@@ -59,41 +91,119 @@ class QuestionGenerator {
   }
 
   /**
+   * Get the language of a term
+   * @param {Object} term - Term object
+   * @returns {string|null} Language name or null if English
+   */
+  getTermLanguage(term) {
+    const languages = ['Italian', 'French', 'German', 'Latin']
+    const termLanguage = term.tags.find(tag => languages.includes(tag))
+    return termLanguage || null
+  }
+
+  /**
+   * Check if Language tag is selected
+   * @param {string[]} selectedTags - Selected tag categories
+   * @returns {boolean} True if Language tag is selected
+   */
+  isLanguageSelected(selectedTags) {
+    return selectedTags.includes('Language')
+  }
+
+  /**
+   * Format question text with placeholders
+   * @param {string} template - Question template
+   * @param {object} replacements - Object with placeholder values
+   * @returns {string} Formatted question text
+   */
+  formatQuestion(template, replacements = {}) {
+    let formatted = template
+    
+    // Handle {language} placeholder
+    if (replacements.language && formatted.includes('{language}')) {
+      formatted = formatted.replace('{language}', replacements.language.toLowerCase())
+    }
+    
+    // Handle {term} placeholder
+    if (replacements.term !== undefined) {
+      formatted = formatted.replace(/{term}/g, `"${replacements.term}"`)
+    }
+    
+    // Handle {definition} placeholder
+    if (replacements.definition !== undefined) {
+      formatted = formatted.replace(/{definition}/g, `"${replacements.definition}"`)
+    }
+    
+    // Handle {description} placeholder
+    if (replacements.description !== undefined) {
+      formatted = formatted.replace(/{description}/g, `"${replacements.description}"`)
+    }
+    
+    return formatted
+  }
+
+  /**
+   * Format question text with optional language (backward compatibility)
+   * @param {string} template - Question template
+   * @param {string|null} language - Language name or null
+   * @returns {string} Formatted question text
+   */
+  formatQuestionWithLanguage(template, language) {
+    return this.formatQuestion(template, { language })
+  }
+
+  /**
    * Generate a question based on format type
    * @param {Object} format - Question format object
    * @param {Array} availableTerms - Available terms to use
    * @param {Set} usedTerms - Set of already used terms
    * @param {string[]} selectedTags - Selected tag categories
+   * @param {Array} gradeFilteredTerms - All terms filtered by grade (for MC options)
    * @returns {Object|null} Generated question or null
    */
-  generateQuestionByFormat(format, availableTerms, usedTerms, selectedTags) {
-    const unusedTerms = availableTerms.filter(t => !usedTerms.has(getCanonicalTerm(t)))
+  generateQuestionByFormat(format, availableTerms, usedTerms, selectedTags, gradeFilteredTerms) {
+    // Filter out used terms, but allow reuse if we don't have enough unique terms
+    let unusedTerms = availableTerms.filter(t => !usedTerms.has(getCanonicalTerm(t)))
+    
+    // If no unused terms available, allow reusing terms (for cases with few terms)
+    if (unusedTerms.length === 0) {
+      unusedTerms = availableTerms
+    }
+    
     if (unusedTerms.length === 0) return null
+
+    const languageSelected = this.isLanguageSelected(selectedTags)
 
     switch (format.generate) {
       case 'term_to_definition':
-        return this.generateTermToDefinition(unusedTerms, format.type === 'multiple_choice')
+        return this.generateTermToDefinition(unusedTerms, format.type === 'multiple_choice', format, languageSelected, gradeFilteredTerms)
       
       case 'definition_to_term':
-        return this.generateDefinitionToTerm(unusedTerms, format.type === 'multiple_choice')
+        return this.generateDefinitionToTerm(unusedTerms, format.type === 'multiple_choice', format, languageSelected, gradeFilteredTerms)
       
       case 'tempo_ordering':
-        return this.generateTempoOrdering(availableTerms)
+        return this.generateTempoOrdering(availableTerms, format)
       
       case 'dynamics_ordering':
-        return this.generateDynamicsOrdering(availableTerms)
+        return this.generateDynamicsOrdering(availableTerms, format)
       
       case 'similar_terms':
-        return this.generateSimilarTerms(unusedTerms, selectedTags)
+        return this.generateSimilarTerms(unusedTerms, selectedTags, format, gradeFilteredTerms)
       
       case 'opposite_terms':
-        return this.generateOppositeTerms(unusedTerms, selectedTags)
+        return this.generateOppositeTerms(unusedTerms, selectedTags, format, gradeFilteredTerms)
       
       case 'tag_classification':
-        return this.generateTagClassification(unusedTerms)
+        return this.generateTagClassification(unusedTerms, format, languageSelected)
       
       case 'context_application':
-        return this.generateContextApplication(unusedTerms, selectedTags)
+        return this.generateContextApplication(unusedTerms, selectedTags, format, languageSelected, gradeFilteredTerms)
+      
+      case 'language_identification':
+        return this.generateLanguageIdentification(unusedTerms, format)
+      
+      case 'same_language_term':
+        return this.generateSameLanguageTerm(unusedTerms, selectedTags, format, gradeFilteredTerms)
       
       default:
         return null
@@ -103,14 +213,38 @@ class QuestionGenerator {
   /**
    * Generate term to definition question
    */
-  generateTermToDefinition(terms, isMultipleChoice) {
+  generateTermToDefinition(terms, isMultipleChoice, format, languageSelected, gradeFilteredTerms) {
     const term = terms[Math.floor(Math.random() * terms.length)]
     const correctAnswer = term.definition
     const displayAlias = getRandomAlias(term)
     const canonicalTerm = getCanonicalTerm(term)
+    const language = this.getTermLanguage(term)
+
+    // Get description array and randomly select one
+    let descriptionArray = languageSelected && format.descriptionWithLanguage
+      ? format.descriptionWithLanguage
+      : format.description
+    
+    // Ensure it's an array
+    if (!Array.isArray(descriptionArray)) {
+      descriptionArray = [descriptionArray]
+    }
+    
+    if (descriptionArray.length === 0) {
+      return null
+    }
+    
+    // Randomly select a description
+    let questionTemplate = descriptionArray[Math.floor(Math.random() * descriptionArray.length)]
+    
+    // Format question with placeholders
+    const questionText = this.formatQuestion(questionTemplate, {
+      language: languageSelected && language ? language : null,
+      term: displayAlias
+    })
 
     if (isMultipleChoice) {
-      const wrongAnswers = this.musicTerms
+      const wrongAnswers = gradeFilteredTerms
         .filter(t => t.definition !== correctAnswer)
         .sort(() => Math.random() - 0.5)
         .slice(0, 3)
@@ -120,7 +254,7 @@ class QuestionGenerator {
       
       return {
         type: 'multiple_choice',
-        question: `What is the meaning of "${displayAlias}"?`,
+        question: questionText,
         options,
         correctAnswer,
         correctTerm: canonicalTerm
@@ -128,7 +262,7 @@ class QuestionGenerator {
     } else {
       return {
         type: 'short_answer',
-        question: `What is the meaning of "${displayAlias}"?`,
+        question: questionText,
         correctAnswer,
         correctTerm: canonicalTerm
       }
@@ -138,22 +272,36 @@ class QuestionGenerator {
   /**
    * Generate definition to term question
    */
-  generateDefinitionToTerm(terms, isMultipleChoice) {
+  generateDefinitionToTerm(terms, isMultipleChoice, format, languageSelected, gradeFilteredTerms) {
     const term = terms[Math.floor(Math.random() * terms.length)]
     const canonicalTerm = getCanonicalTerm(term)
     const displayAlias = getRandomAlias(term)
+    const language = this.getTermLanguage(term)
 
-    const questionTemplates = [
-      `Which term means "${term.definition}"?`,
-      `What is the term for "${term.definition}"?`,
-      `Select the term that means "${term.definition}":`,
-      `Which musical term describes "${term.definition}"?`,
-      `Identify the term meaning "${term.definition}":`
-    ]
-    const selectedQuestion = questionTemplates[Math.floor(Math.random() * questionTemplates.length)]
+    // Get description array and randomly select one
+    let descriptionArray = languageSelected && format.descriptionWithLanguage && language
+      ? format.descriptionWithLanguage
+      : format.description
+    
+    // Ensure it's an array
+    if (!Array.isArray(descriptionArray)) {
+      descriptionArray = [descriptionArray]
+    }
+    
+    if (descriptionArray.length === 0) {
+      return null
+    }
+    
+    // Randomly select from description array
+    let questionTemplate = descriptionArray[Math.floor(Math.random() * descriptionArray.length)]
+    // Format question with placeholders
+    const questionText = this.formatQuestion(questionTemplate, {
+      language: languageSelected && language ? language : null,
+      definition: term.definition
+    })
 
     if (isMultipleChoice) {
-      const wrongAnswers = this.musicTerms
+      const wrongAnswers = gradeFilteredTerms
         .filter(t => !termsMatch(t, term))
         .sort(() => Math.random() - 0.5)
         .slice(0, 3)
@@ -163,7 +311,7 @@ class QuestionGenerator {
       
       return {
         type: 'multiple_choice',
-        question: selectedQuestion,
+        question: questionText,
         options,
         correctAnswer: displayAlias,
         correctTerm: canonicalTerm
@@ -171,7 +319,7 @@ class QuestionGenerator {
     } else {
       return {
         type: 'short_answer',
-        question: selectedQuestion,
+        question: questionText,
         correctAnswer: displayAlias,
         correctTerm: canonicalTerm
       }
@@ -181,7 +329,7 @@ class QuestionGenerator {
   /**
    * Generate tempo ordering question
    */
-  generateTempoOrdering(allTerms) {
+  generateTempoOrdering(allTerms, format) {
     const tempoTerms = allTerms.filter(t => t.tags.includes('Tempo'))
     if (tempoTerms.length < 3) return null
 
@@ -219,9 +367,17 @@ class QuestionGenerator {
       displayMap[getCanonicalTerm(t)] = getRandomAlias(t)
     })
 
+    // Get description array and randomly select one
+    let questionText = 'Order these tempo terms from slowest to fastest:'
+    if (format && format.description && Array.isArray(format.description) && format.description.length > 0) {
+      questionText = format.description[Math.floor(Math.random() * format.description.length)]
+    } else if (format && format.description && !Array.isArray(format.description)) {
+      questionText = format.description
+    }
+
     return {
       type: 'ordering',
-      question: 'Order these tempo terms from slowest to fastest:',
+      question: questionText,
       termIds,
       displayMap,
       correctOrderIds,
@@ -233,12 +389,30 @@ class QuestionGenerator {
   /**
    * Generate dynamics ordering question
    */
-  generateDynamicsOrdering(allTerms) {
-    const dynamicsTerms = allTerms.filter(t => t.tags.includes('Dynamics'))
-    if (dynamicsTerms.length < 3) return null
-
+  generateDynamicsOrdering(allTerms, format) {
     const dynamicsRules = this.orderingData.dynamics.rules
     const defaultOrder = this.orderingData.dynamics.defaultOrder
+
+    // Only include terms that match the ordering rules (fixed dynamics only)
+    const availableDynamicsTerms = allTerms.filter(t => {
+      if (!t.tags.includes('Dynamics')) return false
+      const aliases = Array.isArray(t.term) ? t.term : [t.term]
+      const termLower = aliases.join(' ').toLowerCase()
+      
+      // Check if term matches any rule (and doesn't match exclude patterns)
+      for (const rule of dynamicsRules) {
+        const hasKeyword = rule.keywords.some(keyword => termLower.includes(keyword))
+        if (hasKeyword) {
+          const hasExclude = rule.exclude && rule.exclude.some(exclude => termLower.includes(exclude))
+          if (!hasExclude) {
+            return true // This term matches a rule, include it
+          }
+        }
+      }
+      return false // Term doesn't match any rule, exclude it
+    })
+    
+    if (availableDynamicsTerms.length < 3) return null
 
     const getDynamicsOrder = (term) => {
       const aliases = Array.isArray(term.term) ? term.term : [term.term]
@@ -253,10 +427,10 @@ class QuestionGenerator {
           }
         }
       }
-      return defaultOrder
+      return defaultOrder // Should not happen if filtering is correct
     }
 
-    const selectedTerms = dynamicsTerms
+    const selectedTerms = availableDynamicsTerms
       .sort(() => Math.random() - 0.5)
       .slice(0, 4)
 
@@ -276,9 +450,17 @@ class QuestionGenerator {
       displayMap[getCanonicalTerm(t)] = getRandomAlias(t)
     })
 
+    // Get description array and randomly select one
+    let questionText = 'Order these dynamics terms from softest to loudest:'
+    if (format && format.description && Array.isArray(format.description) && format.description.length > 0) {
+      questionText = format.description[Math.floor(Math.random() * format.description.length)]
+    } else if (format && format.description && !Array.isArray(format.description)) {
+      questionText = format.description
+    }
+
     return {
       type: 'ordering',
-      question: 'Order these dynamics terms from softest to loudest:',
+      question: questionText,
       termIds,
       displayMap,
       correctOrderIds,
@@ -290,13 +472,13 @@ class QuestionGenerator {
   /**
    * Generate similar terms question
    */
-  generateSimilarTerms(terms, selectedTags) {
+  generateSimilarTerms(terms, selectedTags, format, gradeFilteredTerms) {
     const term = terms[Math.floor(Math.random() * terms.length)]
     const canonicalTerm = getCanonicalTerm(term)
     const displayAlias = getRandomAlias(term)
     
     // Find terms with similar definitions or same tag
-    const similarTerms = this.musicTerms
+    const similarTerms = gradeFilteredTerms
       .filter(t => 
         !termsMatch(t, term) && 
         (t.tags.some(tag => term.tags.includes(tag)) || 
@@ -319,7 +501,7 @@ class QuestionGenerator {
     // If we don't have enough similar terms, add some unrelated terms as distractors
     let options = [correctSimilarTerm, ...otherSimilarTerms]
     if (options.length < 4) {
-      const unrelatedTerms = this.musicTerms
+      const unrelatedTerms = gradeFilteredTerms
         .filter(t => !termsMatch(t, term) && !similarTerms.some(st => termsMatch(t, st)))
         .sort(() => Math.random() - 0.5)
         .slice(0, 4 - options.length)
@@ -328,9 +510,20 @@ class QuestionGenerator {
     
     options = options.sort(() => Math.random() - 0.5)
     
+    // Get description array and randomly select one
+    let questionText
+    if (format && format.description && Array.isArray(format.description) && format.description.length > 0) {
+      const selectedDescription = format.description[Math.floor(Math.random() * format.description.length)]
+      questionText = this.formatQuestion(selectedDescription, {
+        term: displayAlias
+      }) + '?'
+    } else {
+      questionText = `Which term is most similar in meaning to "${displayAlias}"?`
+    }
+    
     return {
       type: 'multiple_choice',
-      question: `Which term is most similar in meaning to "${displayAlias}"?`,
+      question: questionText,
       options: options.map(t => getRandomAlias(t)),
       correctAnswer: correctAnswerAlias,
       correctTerm: correctAnswerCanonical
@@ -340,7 +533,7 @@ class QuestionGenerator {
   /**
    * Generate opposite terms question
    */
-  generateOppositeTerms(terms, selectedTags) {
+  generateOppositeTerms(terms, selectedTags, format, gradeFilteredTerms) {
     const opposites = [
       { termAlias: 'piano', oppositeAlias: 'forte' },
       { termAlias: 'pianissimo', oppositeAlias: 'fortissimo' },
@@ -353,7 +546,7 @@ class QuestionGenerator {
 
     const availableOpposites = opposites.filter(pair => {
       const termObj = terms.find(t => hasAlias(t, pair.termAlias))
-      const oppositeObj = this.musicTerms.find(t => hasAlias(t, pair.oppositeAlias))
+      const oppositeObj = gradeFilteredTerms.find(t => hasAlias(t, pair.oppositeAlias))
       return termObj && oppositeObj
     })
 
@@ -361,14 +554,14 @@ class QuestionGenerator {
 
     const pair = availableOpposites[Math.floor(Math.random() * availableOpposites.length)]
     const term = terms.find(t => hasAlias(t, pair.termAlias))
-    const oppositeTerm = this.musicTerms.find(t => hasAlias(t, pair.oppositeAlias))
+    const oppositeTerm = gradeFilteredTerms.find(t => hasAlias(t, pair.oppositeAlias))
 
     if (!term || !oppositeTerm) return null
 
     const displayAlias = getRandomAlias(term)
     const oppositeDisplayAlias = getRandomAlias(oppositeTerm)
 
-    const wrongAnswers = this.musicTerms
+    const wrongAnswers = gradeFilteredTerms
       .filter(t => !termsMatch(t, oppositeTerm) && !termsMatch(t, term))
       .sort(() => Math.random() - 0.5)
       .slice(0, 3)
@@ -376,9 +569,20 @@ class QuestionGenerator {
 
     const options = [oppositeDisplayAlias, ...wrongAnswers].sort(() => Math.random() - 0.5)
 
+    // Get description array and randomly select one
+    let questionText
+    if (format && format.description && Array.isArray(format.description) && format.description.length > 0) {
+      const selectedDescription = format.description[Math.floor(Math.random() * format.description.length)]
+      questionText = this.formatQuestion(selectedDescription, {
+        term: displayAlias
+      }) + '?'
+    } else {
+      questionText = `Which term is the opposite of "${displayAlias}"?`
+    }
+
     return {
       type: 'multiple_choice',
-      question: `Which term is the opposite of "${displayAlias}"?`,
+      question: questionText,
       options,
       correctAnswer: oppositeDisplayAlias,
       correctTerm: getCanonicalTerm(oppositeTerm)
@@ -388,11 +592,14 @@ class QuestionGenerator {
   /**
    * Generate tag classification question
    */
-  generateTagClassification(terms) {
+  generateTagClassification(terms, format, languageSelected) {
     const term = terms[Math.floor(Math.random() * terms.length)]
-    const correctTag = term.tags[0]
+    // Get the first non-language tag as correct answer (category tag)
+    const languages = ['Italian', 'French', 'German', 'Latin']
+    const correctTag = term.tags.find(tag => !languages.includes(tag) && tag !== 'Language')
     const displayAlias = getRandomAlias(term)
     const canonicalTerm = getCanonicalTerm(term)
+    const language = this.getTermLanguage(term)
 
     const allTags = ['Tempo', 'Dynamics', 'Style/Expression', 'Articulation', 
                      'Technique/Instruction', 'Form/Direction', 'Qualifier', 'Theory/Harmony']
@@ -402,9 +609,32 @@ class QuestionGenerator {
 
     const options = [correctTag, ...wrongTags].sort(() => Math.random() - 0.5)
 
+    // Get description array and randomly select one
+    let descriptionArray = languageSelected && format.descriptionWithLanguage && language
+      ? format.descriptionWithLanguage
+      : format.description
+    
+    // Ensure it's an array
+    if (!Array.isArray(descriptionArray)) {
+      descriptionArray = [descriptionArray]
+    }
+    
+    if (descriptionArray.length === 0) {
+      return null
+    }
+    
+    // Randomly select a description
+    let questionTemplate = descriptionArray[Math.floor(Math.random() * descriptionArray.length)]
+    
+    // Format question with placeholders
+    const questionText = this.formatQuestion(questionTemplate, {
+      language: languageSelected && language ? language : null,
+      term: displayAlias
+    })
+
     return {
       type: 'multiple_choice',
-      question: `Which tag category does "${displayAlias}" belong to?`,
+      question: questionText,
       options,
       correctAnswer: correctTag,
       correctTerm: canonicalTerm
@@ -414,7 +644,7 @@ class QuestionGenerator {
   /**
    * Generate context application question
    */
-  generateContextApplication(terms, selectedTags) {
+  generateContextApplication(terms, selectedTags, format, languageSelected, gradeFilteredTerms) {
     const contexts = [
       { description: 'The music should gradually get louder', termAliases: ['crescendo'] },
       { description: 'The music should gradually get softer', termAliases: ['decrescendo', 'diminuendo'] },
@@ -440,8 +670,9 @@ class QuestionGenerator {
     if (!correctTerm) return null
 
     const displayAlias = getRandomAlias(correctTerm)
+    const language = this.getTermLanguage(correctTerm)
 
-    const wrongAnswers = this.musicTerms
+    const wrongAnswers = gradeFilteredTerms
       .filter(t => !context.termAliases.some(alias => hasAlias(t, alias)))
       .sort(() => Math.random() - 0.5)
       .slice(0, 3)
@@ -449,12 +680,125 @@ class QuestionGenerator {
 
     const options = [displayAlias, ...wrongAnswers].sort(() => Math.random() - 0.5)
 
+    // Get description array and randomly select one
+    let descriptionArray = languageSelected && format.descriptionWithLanguage && language
+      ? format.descriptionWithLanguage
+      : format.description
+    
+    // Ensure it's an array
+    if (!Array.isArray(descriptionArray)) {
+      descriptionArray = [descriptionArray]
+    }
+    
+    if (descriptionArray.length === 0) {
+      return null
+    }
+    
+    // Randomly select a description
+    let questionTemplate = descriptionArray[Math.floor(Math.random() * descriptionArray.length)]
+    
+    // Format question with placeholders
+    const questionText = this.formatQuestion(questionTemplate, {
+      language: languageSelected && language ? language : null,
+      description: context.description
+    })
+
     return {
       type: 'multiple_choice',
-      question: `Which term would be most suitable for: "${context.description}"?`,
+      question: questionText,
       options,
       correctAnswer: displayAlias,
       correctTerm: getCanonicalTerm(correctTerm)
+    }
+  }
+
+  /**
+   * Generate language identification question
+   */
+  generateLanguageIdentification(terms, format) {
+    const term = terms[Math.floor(Math.random() * terms.length)]
+    const language = this.getTermLanguage(term)
+    
+    if (!language) return null // Skip if no language (English)
+
+    const displayAlias = getRandomAlias(term)
+    const canonicalTerm = getCanonicalTerm(term)
+
+    const allLanguages = ['Italian', 'French', 'German', 'Latin']
+    const wrongLanguages = allLanguages.filter(lang => lang !== language)
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 3)
+
+    const options = [language, ...wrongLanguages].sort(() => Math.random() - 0.5)
+
+    // Get description array and randomly select one
+    if (!format || !format.description || !Array.isArray(format.description) || format.description.length === 0) {
+      return null
+    }
+    
+    const selectedDescription = format.description[Math.floor(Math.random() * format.description.length)]
+    const questionText = this.formatQuestion(selectedDescription, {
+      term: displayAlias
+    })
+
+    return {
+      type: 'multiple_choice',
+      question: questionText,
+      options,
+      correctAnswer: language,
+      correctTerm: canonicalTerm
+    }
+  }
+
+  /**
+   * Generate same language term question
+   */
+  generateSameLanguageTerm(terms, selectedTags, format, gradeFilteredTerms) {
+    // Get a random term with a language from available terms
+    const termsWithLanguage = terms.filter(t => this.getTermLanguage(t) !== null)
+    if (termsWithLanguage.length === 0) return null
+
+    const term = termsWithLanguage[Math.floor(Math.random() * termsWithLanguage.length)]
+    const language = this.getTermLanguage(term)
+    if (!language) return null
+
+    const displayAlias = getRandomAlias(term)
+    const canonicalTerm = getCanonicalTerm(term)
+
+    // Find other terms in the same language (from grade-filtered terms)
+    const sameLanguageTerms = gradeFilteredTerms.filter(t => {
+      const tLanguage = this.getTermLanguage(t)
+      return tLanguage === language && !termsMatch(t, term)
+    })
+
+    if (sameLanguageTerms.length < 3) return null
+
+    // Select 3 wrong answers from same language terms
+    const wrongAnswers = sameLanguageTerms
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 3)
+      .map(t => getRandomAlias(t))
+
+    const options = [displayAlias, ...wrongAnswers].sort(() => Math.random() - 0.5)
+
+    // Get description array and randomly select one
+    if (!format || !format.description || !Array.isArray(format.description) || format.description.length === 0) {
+      return null
+    }
+    
+    const selectedDescription = format.description[Math.floor(Math.random() * format.description.length)]
+    // Format question with placeholders
+    const questionText = this.formatQuestion(selectedDescription, {
+      language: language,
+      definition: term.definition
+    }) + '?'
+
+    return {
+      type: 'multiple_choice',
+      question: questionText,
+      options,
+      correctAnswer: displayAlias,
+      correctTerm: canonicalTerm
     }
   }
 }

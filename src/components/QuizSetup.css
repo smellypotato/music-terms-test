@@ -23,16 +23,20 @@
   color: #333;
 }
 
-.number-input {
+.number-input,
+.grade-select {
   padding: 12px;
   font-size: 1rem;
   border: 2px solid #ddd;
   border-radius: 8px;
   width: 150px;
   transition: border-color 0.3s;
+  background: white;
+  cursor: pointer;
 }
 
-.number-input:focus {
+.number-input:focus,
+.grade-select:focus {
   outline: none;
   border-color: #667eea;
 }

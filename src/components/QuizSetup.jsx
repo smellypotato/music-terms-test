@@ -9,12 +9,14 @@ const ALL_TAGS = [
   'Technique/Instruction',
   'Form/Direction',
   'Qualifier',
-  'Theory/Harmony'
+  'Theory/Harmony',
+  'Language'
 ]
 
 function QuizSetup({ onStartQuiz }) {
   const [numQuestions, setNumQuestions] = useState(10)
   const [selectedTags, setSelectedTags] = useState(ALL_TAGS)
+  const [selectedGrade, setSelectedGrade] = useState(0)
 
   const handleTagToggle = (tag) => {
     setSelectedTags(prev => 
@@ -42,7 +44,7 @@ function QuizSetup({ onStartQuiz }) {
       alert('Please enter a number of questions between 1 and 100.')
       return
     }
-    onStartQuiz({ numQuestions, selectedTags })
+    onStartQuiz({ numQuestions, selectedTags, selectedGrade })
   }
 
   return (
@@ -61,6 +63,25 @@ function QuizSetup({ onStartQuiz }) {
             onChange={(e) => setNumQuestions(parseInt(e.target.value) || 1)}
             className="number-input"
           />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="selectedGrade">
+            Grade Level:
+          </label>
+          <select
+            id="selectedGrade"
+            value={selectedGrade}
+            onChange={(e) => setSelectedGrade(parseInt(e.target.value))}
+            className="grade-select"
+          >
+            <option value={0}>All</option>
+            <option value={1}>Grade 1</option>
+            <option value={2}>Grade 2</option>
+            <option value={3}>Grade 3</option>
+            <option value={4}>Grade 4</option>
+            <option value={5}>Grade 5</option>
+          </select>
         </div>
 
         <div className="form-group">

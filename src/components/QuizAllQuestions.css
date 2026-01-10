@@ -112,84 +112,79 @@
   border-color: #667eea;
 }
 
-.all-ordering-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-left: 10px;
-}
-
-.all-ordering-item {
+.ordering-containers-wrapper {
   display: flex;
   align-items: center;
   gap: 15px;
-  padding: 12px;
-  background: white;
-  border-radius: 6px;
-  border: 2px solid #e9ecef;
+  margin-left: 10px;
+  margin-top: 20px;
+  flex-wrap: wrap;
 }
 
-.order-number {
+.ordering-label-left,
+.ordering-label-right {
   font-weight: 600;
   color: #667eea;
-  min-width: 40px;
-  text-align: center;
+  font-size: 0.9rem;
+  padding: 8px 12px;
+  background: #f0f4ff;
+  border-radius: 6px;
+  white-space: nowrap;
 }
 
-.order-term {
-  flex: 1;
-  font-size: 1rem;
-  color: #495057;
-}
-
-.order-buttons {
+.ordering-containers {
   display: flex;
-  gap: 5px;
+  gap: 10px;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  min-height: 120px;
 }
 
-.order-btn {
-  padding: 6px 12px;
-  font-size: 0.85rem;
-  border: 1px solid #dee2e6;
+.ordering-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   background: white;
-  color: #495057;
-  border-radius: 4px;
-  cursor: pointer;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  padding: 20px 15px;
+  min-width: 120px;
+  min-height: 80px;
+  justify-content: center;
+  position: relative;
   transition: all 0.2s;
 }
 
-.order-btn:hover:not(:disabled) {
-  background: #e9ecef;
-  border-color: #667eea;
-}
-
-.order-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.order-btn.remove {
-  color: #dc3545;
-  border-color: #dc3545;
-}
-
-.order-btn.remove:hover:not(:disabled) {
-  background: #dc3545;
-  color: white;
-}
-
-.current-order-preview {
-  margin-top: 15px;
-  padding: 12px;
-  background: #e9ecef;
-  border-radius: 6px;
-  font-size: 0.95rem;
-  margin-left: 10px;
-}
-
-.order-preview-item {
-  color: #667eea;
+.ordering-term-display {
+  font-size: 1.1rem;
   font-weight: 500;
+  color: #495057;
+  text-align: center;
+  flex: 1;
+}
+
+.swap-button {
+  border: none;
+  background: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.swap-button:hover {
+  transform: scale(1.1);
+}
+
+.swap-button:active {
+  transform: scale(0.95);
 }
 
 .quiz-all-footer {
@@ -213,5 +208,65 @@
 .submit-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.cheatsheet-button {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cheatsheet-button:hover {
+  background: #45a049;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+.cheatsheet-button:active {
+  transform: translateY(0);
+}
+
+.back-button {
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.back-button:hover {
+  background: #5a6268;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+.back-button:active {
+  transform: translateY(0);
 }
 
