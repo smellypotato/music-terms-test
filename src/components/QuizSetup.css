@@ -1,0 +1,120 @@
+.quiz-setup {
+  background: white;
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.setup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-group label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.number-input {
+  padding: 12px;
+  font-size: 1rem;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  width: 150px;
+  transition: border-color 0.3s;
+}
+
+.number-input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.tag-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.select-all-btn,
+.deselect-all-btn {
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  border: 2px solid #667eea;
+  background: white;
+  color: #667eea;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.select-all-btn:hover,
+.deselect-all-btn:hover {
+  background: #667eea;
+  color: white;
+}
+
+.tag-checkboxes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.checkbox-label:hover {
+  background: #e9ecef;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #667eea;
+}
+
+.checkbox-label span {
+  font-size: 0.95rem;
+  color: #495057;
+}
+
+.start-button {
+  padding: 15px 40px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  align-self: center;
+}
+
+.start-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.start-button:active {
+  transform: translateY(0);
+}
+

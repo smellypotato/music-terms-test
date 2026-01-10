@@ -1,0 +1,66 @@
+[
+  {
+    "id": "term_to_definition_mc",
+    "type": "multiple_choice",
+    "description": "What is the meaning of this term?",
+    "applicableTags": ["Tempo", "Dynamics", "Style/Expression", "Articulation", "Technique/Instruction", "Form/Direction", "Qualifier", "Theory/Harmony"],
+    "generate": "term_to_definition"
+  },
+  {
+    "id": "definition_to_term_mc",
+    "type": "multiple_choice",
+    "description": "Which term matches this definition?",
+    "applicableTags": ["Tempo", "Dynamics", "Style/Expression", "Articulation", "Technique/Instruction", "Form/Direction", "Qualifier", "Theory/Harmony"],
+    "generate": "definition_to_term"
+  },
+  {
+    "id": "term_to_definition_short",
+    "type": "short_answer",
+    "description": "What is the meaning of this term?",
+    "applicableTags": ["Tempo", "Dynamics", "Style/Expression", "Articulation", "Technique/Instruction", "Form/Direction", "Qualifier", "Theory/Harmony"],
+    "generate": "term_to_definition"
+  },
+  {
+    "id": "tempo_ordering",
+    "type": "ordering",
+    "description": "Order these tempo terms from slowest to fastest:",
+    "applicableTags": ["Tempo"],
+    "generate": "tempo_ordering"
+  },
+  {
+    "id": "dynamics_ordering",
+    "type": "ordering",
+    "description": "Order these dynamics terms from softest to loudest:",
+    "applicableTags": ["Dynamics"],
+    "generate": "dynamics_ordering"
+  },
+  {
+    "id": "similar_terms_comparison",
+    "type": "multiple_choice",
+    "description": "Which term is most similar in meaning to",
+    "applicableTags": ["Tempo", "Dynamics", "Style/Expression", "Articulation"],
+    "generate": "similar_terms"
+  },
+  {
+    "id": "opposite_terms",
+    "type": "multiple_choice",
+    "description": "Which term is the opposite of",
+    "applicableTags": ["Tempo", "Dynamics", "Articulation"],
+    "generate": "opposite_terms"
+  },
+  {
+    "id": "tag_classification",
+    "type": "multiple_choice",
+    "description": "Which tag category does this term belong to?",
+    "applicableTags": ["Tempo", "Dynamics", "Style/Expression", "Articulation", "Technique/Instruction", "Form/Direction", "Qualifier", "Theory/Harmony"],
+    "generate": "tag_classification"
+  },
+  {
+    "id": "context_application",
+    "type": "multiple_choice",
+    "description": "Which term would be most suitable for this description?",
+    "applicableTags": ["Tempo", "Dynamics", "Style/Expression", "Articulation", "Technique/Instruction"],
+    "generate": "context_application"
+  }
+]
+

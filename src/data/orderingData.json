@@ -1,0 +1,59 @@
+{
+  "tempo": {
+    "order": {
+      "grave": 1,
+      "lento": 2,
+      "lentement": 2,
+      "langsam": 2,
+      "adagio": 3,
+      "larghetto": 4,
+      "largamente": 4,
+      "andante": 5,
+      "andantino": 6,
+      "moderato": 6,
+      "modéré": 6,
+      "mässig": 6,
+      "allegretto": 7,
+      "allegro": 8,
+      "vivace": 8,
+      "vivo": 8,
+      "animato": 8,
+      "presto": 9,
+      "prestissimo": 10,
+      "schnell": 9,
+      "vite": 9
+    }
+  },
+  "dynamics": {
+    "rules": [
+      {
+        "keywords": ["pianissimo", "pp"],
+        "order": 1
+      },
+      {
+        "keywords": ["piano"],
+        "exclude": ["mezzo", "forte"],
+        "order": 2
+      },
+      {
+        "keywords": ["mezzo piano", "mp"],
+        "order": 3
+      },
+      {
+        "keywords": ["mezzo forte", "mf"],
+        "order": 4
+      },
+      {
+        "keywords": ["forte"],
+        "exclude": ["piano", "mezzo", "fortissimo"],
+        "order": 5
+      },
+      {
+        "keywords": ["fortissimo", "ff"],
+        "order": 6
+      }
+    ],
+    "defaultOrder": 5
+  }
+}
+

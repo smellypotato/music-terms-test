@@ -1,0 +1,277 @@
+.printable-quiz-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.printable-actions {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.print-button {
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.print-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.printable-content {
+  background: white;
+  padding: 40px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.printable-header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.printable-header h1 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.quiz-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.quiz-info p {
+  margin: 0;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.answers-label {
+  font-weight: bold;
+  color: #28a745 !important;
+  font-size: 1.1rem !important;
+}
+
+.printable-questions {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.printable-question {
+  display: flex;
+  gap: 15px;
+  page-break-inside: avoid;
+  margin-bottom: 20px;
+}
+
+.question-number {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #667eea;
+  min-width: 30px;
+}
+
+.question-content {
+  flex: 1;
+}
+
+.question-text {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+
+.printable-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-left: 20px;
+}
+
+.printable-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.printable-option.correct-answer {
+  background-color: #d4edda;
+  border-left: 3px solid #28a745;
+}
+
+.printable-option.incorrect-answer {
+  background-color: #f8d7da;
+  border-left: 3px solid #dc3545;
+}
+
+.option-letter {
+  font-weight: bold;
+  color: #667eea;
+  min-width: 20px;
+}
+
+.option-text {
+  flex: 1;
+  color: #495057;
+}
+
+.answer-marker {
+  color: #28a745;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.printable-answer-line {
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+.answer-line {
+  border-bottom: 2px solid #333;
+  min-width: 300px;
+  height: 30px;
+  display: inline-block;
+}
+
+.answer-text {
+  color: #28a745;
+  font-weight: 500;
+  padding: 8px;
+  background-color: #d4edda;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.printable-ordering {
+  margin-left: 20px;
+}
+
+.ordering-terms-list {
+  margin-bottom: 15px;
+}
+
+.printable-order-item {
+  padding: 8px 0;
+  border-bottom: 1px solid #e9ecef;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.order-term-name {
+  font-weight: 500;
+  color: #495057;
+}
+
+.ordering-blanks {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px dashed #ccc;
+}
+
+.ordering-instruction {
+  font-weight: 500;
+  color: #666;
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+}
+
+.ordering-blank {
+  padding: 8px 0;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.ordering-answer-display {
+  margin-top: 10px;
+}
+
+.order-answer-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.order-position {
+  font-weight: bold;
+  color: #28a745;
+  min-width: 25px;
+}
+
+.printable-answers-summary {
+  margin-top: 50px;
+  padding-top: 30px;
+  border-top: 2px solid #e9ecef;
+  page-break-before: always;
+}
+
+.printable-answers-summary h2 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.answer-summary-item {
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+  color: #495057;
+}
+
+/* Print styles */
+@media print {
+  .printable-quiz-container {
+    padding: 0;
+  }
+
+  .printable-actions {
+    display: none;
+  }
+
+  .printable-content {
+    box-shadow: none;
+    padding: 20px;
+  }
+
+  .printable-question {
+    page-break-inside: avoid;
+    margin-bottom: 25px;
+  }
+
+  .printable-header {
+    page-break-after: avoid;
+  }
+
+  .printable-answers-summary {
+    page-break-before: always;
+  }
+
+  .printable-option.correct-answer {
+    background-color: #f0f0f0;
+    border-left: 3px solid #000;
+  }
+
+  .printable-option.incorrect-answer {
+    background-color: #f0f0f0;
+    border-left: 3px solid #666;
+  }
+}
+
