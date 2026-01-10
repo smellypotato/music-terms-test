@@ -270,3 +270,20 @@
   transform: translateY(0);
 }
 
+.debug-grade {
+  color: #6c757d;
+  font-size: 0.85rem;
+  font-weight: normal;
+  margin-left: 8px;
+  font-style: italic;
+}
+
+.debug-grade-bottom {
+  color: #6c757d;
+  font-size: 0.75rem;
+  font-weight: normal;
+  margin-top: 8px;
+  font-style: italic;
+  text-align: center;
+}
+

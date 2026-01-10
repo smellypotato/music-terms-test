@@ -1,10 +1,37 @@
 import { useState, useEffect } from 'react'
 import './QuizAllQuestions.css'
 import Cheatsheet from './Cheatsheet'
+import musicTerms from '../data/musicTerms.json'
+import { getCanonicalTerm, hasAlias } from '../utils/termUtils'
 
 function QuizAllQuestions({ questions, answers, onAnswerChange, onSubmit, selectedTags = [], onBack }) {
   const [showCheatsheet, setShowCheatsheet] = useState(false)
   const [orderingStates, setOrderingStates] = useState({})
+  
+  // Check for debug mode from query parameter
+  const isDebugMode = new URLSearchParams(window.location.search).get('debug') === 'true'
+  
+  // Helper function to get grade from a term (by canonical term or alias)
+  const getTermGrade = (termIdentifier) => {
+    if (!termIdentifier) return null
+    const term = musicTerms.find(t => {
+      const canonical = getCanonicalTerm(t)
+      if (canonical === termIdentifier) return true
+      if (hasAlias(t, termIdentifier)) return true
+      return false
+    })
+    return term?.grade ?? null
+  }
+  
+  // Helper function to get grade from an option (could be term alias or definition)
+  const getOptionGrade = (option, question) => {
+    // For term-based options, try to find the term by alias
+    const term = musicTerms.find(t => {
+      const aliases = Array.isArray(t.term) ? t.term : [t.term]
+      return aliases.includes(option)
+    })
+    return term?.grade ?? null
+  }
   
   const handleAnswer = (questionIndex, answer) => {
     onAnswerChange(questionIndex, answer)
@@ -68,36 +95,54 @@ function QuizAllQuestions({ questions, answers, onAnswerChange, onSubmit, select
 
     switch (question.type) {
       case 'multiple_choice':
+        const questionGrade = question.correctTerm ? getTermGrade(question.correctTerm) : null
         return (
           <div key={index} className="all-questions-item">
             <div className="question-number">{index + 1}.</div>
             <div className="question-content">
-              <div className="question-text">{question.question}</div>
+              <div className="question-text">
+                {question.question}
+                {isDebugMode && questionGrade !== null && (
+                  <span className="debug-grade"> [Grade {questionGrade}]</span>
+                )}
+              </div>
               <div className="all-options">
-                {question.options.map((option, optIndex) => (
-                  <label key={optIndex} className="all-option-label">
-                    <input
-                      type="radio"
-                      name={`question-${index}`}
-                      value={option}
-                      checked={currentAnswer === option}
-                      onChange={() => handleAnswer(index, option)}
-                    />
-                    <span className="option-letter">{String.fromCharCode(65 + optIndex)}.</span>
-                    <span>{option}</span>
-                  </label>
-                ))}
+                {question.options.map((option, optIndex) => {
+                  const optionGrade = getOptionGrade(option, question)
+                  return (
+                    <label key={optIndex} className="all-option-label">
+                      <input
+                        type="radio"
+                        name={`question-${index}`}
+                        value={option}
+                        checked={currentAnswer === option}
+                        onChange={() => handleAnswer(index, option)}
+                      />
+                      <span className="option-letter">{String.fromCharCode(65 + optIndex)}.</span>
+                      <span>{option}</span>
+                      {isDebugMode && optionGrade !== null && (
+                        <span className="debug-grade"> [G{optionGrade}]</span>
+                      )}
+                    </label>
+                  )
+                })}
               </div>
             </div>
           </div>
         )
 
       case 'short_answer':
+        const shortAnswerGrade = question.correctTerm ? getTermGrade(question.correctTerm) : null
         return (
           <div key={index} className="all-questions-item">
             <div className="question-number">{index + 1}.</div>
             <div className="question-content">
-              <div className="question-text">{question.question}</div>
+              <div className="question-text">
+                {question.question}
+                {isDebugMode && shortAnswerGrade !== null && (
+                  <span className="debug-grade"> [Grade {shortAnswerGrade}]</span>
+                )}
+              </div>
               <input
                 type="text"
                 value={currentAnswer || ''}
@@ -113,6 +158,9 @@ function QuizAllQuestions({ questions, answers, onAnswerChange, onSubmit, select
         const termIds = question.termIds || []
         const displayMap = question.displayMap || {}
         const order = getOrderingState(index, termIds, currentAnswer)
+        // Get the highest grade from ordering terms for debug display
+        const orderingGrades = termIds.map(id => getTermGrade(id)).filter(g => g !== null)
+        const maxOrderingGrade = orderingGrades.length > 0 ? Math.max(...orderingGrades) : null
         
         // Determine ordering type from question text
         const isTempo = question.question.toLowerCase().includes('tempo') || 
@@ -144,7 +192,12 @@ function QuizAllQuestions({ questions, answers, onAnswerChange, onSubmit, select
           <div key={index} className="all-questions-item">
             <div className="question-number">{index + 1}.</div>
             <div className="question-content">
-              <div className="question-text">{question.question}</div>
+              <div className="question-text">
+                {question.question}
+                {isDebugMode && maxOrderingGrade !== null && (
+                  <span className="debug-grade"> [Grade {maxOrderingGrade}]</span>
+                )}
+              </div>
               <div className="ordering-containers-wrapper">
                 <div className="ordering-label-left">{leftLabel}</div>
                 <div className="ordering-containers">
@@ -153,6 +206,7 @@ function QuizAllQuestions({ questions, answers, onAnswerChange, onSubmit, select
                     const isLeftmost = containerIndex === 0
                     const isRightmost = containerIndex === order.length - 1
                     
+                    const termGrade = getTermGrade(termId)
                     return (
                       <div key={termId} className="ordering-container">
                         {!isLeftmost && (
@@ -167,6 +221,9 @@ function QuizAllQuestions({ questions, answers, onAnswerChange, onSubmit, select
                         )}
                         <div className="ordering-term-display">
                           {displayName}
+                          {isDebugMode && termGrade !== null && (
+                            <div className="debug-grade-bottom">Grade {termGrade}</div>
+                          )}
                         </div>
                         {!isRightmost && (
                           <button

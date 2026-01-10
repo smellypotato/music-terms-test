@@ -1,0 +1,12 @@
+{
+  "opposite": [
+    { "termAlias": "piano", "oppositeAlias": "forte" },
+    { "termAlias": "pianissimo", "oppositeAlias": "fortissimo" },
+    { "termAlias": "crescendo", "oppositeAlias": "decrescendo" },
+    { "termAlias": "accelerando", "oppositeAlias": "rallentando" },
+    { "termAlias": "legato", "oppositeAlias": "staccato" },
+    { "termAlias": "lento", "oppositeAlias": "presto" },
+    { "termAlias": "adagio", "oppositeAlias": "allegro" }
+  ]
+}
+

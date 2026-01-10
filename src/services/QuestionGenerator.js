@@ -1,6 +1,7 @@
 import musicTerms from '../data/musicTerms.json'
 import questionFormats from '../data/questionFormats.json'
 import orderingData from '../data/orderingData.json'
+import compareTerms from '../data/compareTerms.json'
 import { getCanonicalTerm, getRandomAlias, termsMatch, hasAlias } from '../utils/termUtils'
 
 /**
@@ -11,6 +12,7 @@ class QuestionGenerator {
     this.musicTerms = musicTerms
     this.questionFormats = questionFormats
     this.orderingData = orderingData
+    this.compareTerms = compareTerms
   }
 
   /**
@@ -511,15 +513,12 @@ class QuestionGenerator {
     options = options.sort(() => Math.random() - 0.5)
     
     // Get description array and randomly select one
-    let questionText
-    if (format && format.description && Array.isArray(format.description) && format.description.length > 0) {
-      const selectedDescription = format.description[Math.floor(Math.random() * format.description.length)]
-      questionText = this.formatQuestion(selectedDescription, {
-        term: displayAlias
-      }) + '?'
-    } else {
-      questionText = `Which term is most similar in meaning to "${displayAlias}"?`
+    if (!format || !format.description || !Array.isArray(format.description) || format.description.length === 0) {
+      return null
     }
+    
+    const selectedDescription = format.description[Math.floor(Math.random() * format.description.length)]
+    const questionText = this.formatQuestion(selectedDescription, { term: displayAlias });
     
     return {
       type: 'multiple_choice',
@@ -534,15 +533,7 @@ class QuestionGenerator {
    * Generate opposite terms question
    */
   generateOppositeTerms(terms, selectedTags, format, gradeFilteredTerms) {
-    const opposites = [
-      { termAlias: 'piano', oppositeAlias: 'forte' },
-      { termAlias: 'pianissimo', oppositeAlias: 'fortissimo' },
-      { termAlias: 'crescendo', oppositeAlias: 'decrescendo' },
-      { termAlias: 'accelerando', oppositeAlias: 'rallentando' },
-      { termAlias: 'legato', oppositeAlias: 'staccato' },
-      { termAlias: 'lento', oppositeAlias: 'presto' },
-      { termAlias: 'adagio', oppositeAlias: 'allegro' }
-    ]
+    const opposites = this.compareTerms.opposite
 
     const availableOpposites = opposites.filter(pair => {
       const termObj = terms.find(t => hasAlias(t, pair.termAlias))
@@ -570,15 +561,12 @@ class QuestionGenerator {
     const options = [oppositeDisplayAlias, ...wrongAnswers].sort(() => Math.random() - 0.5)
 
     // Get description array and randomly select one
-    let questionText
-    if (format && format.description && Array.isArray(format.description) && format.description.length > 0) {
-      const selectedDescription = format.description[Math.floor(Math.random() * format.description.length)]
-      questionText = this.formatQuestion(selectedDescription, {
-        term: displayAlias
-      }) + '?'
-    } else {
-      questionText = `Which term is the opposite of "${displayAlias}"?`
+    if (!format || !format.description || !Array.isArray(format.description) || format.description.length === 0) {
+      return null
     }
+    
+    const selectedDescription = format.description[Math.floor(Math.random() * format.description.length)]
+    const questionText = this.formatQuestion(selectedDescription, { term: displayAlias });
 
     return {
       type: 'multiple_choice',
