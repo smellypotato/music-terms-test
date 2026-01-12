@@ -59,81 +59,55 @@ function QuizAllQuestions({ questions, answers, onAnswerChange, onSubmit, select
     }))
   }
   
-  // Initialize ordering states for all ordering questions
+  // Initialize ordering states and answers for all ordering questions
   useEffect(() => {
-    setOrderingStates(prev => {
-      const newStates = { ...prev }
-      let hasChanges = false
-      
-      questions.forEach((question, index) => {
-        if (question.type === 'ordering' && !newStates[index]) {
-          const termIds = question.termIds || []
-          const currentAnswer = answers[index]
-          
-          // Initialize with current answer or use the order from termIds (already initialized based on order values)
-          let order
-          if (currentAnswer && currentAnswer.trim()) {
-            order = currentAnswer.split(',').map(id => id.trim()).filter(id => id)
-            if (order.length !== termIds.length) {
-              order = [...termIds]
-            }
-          } else {
-            order = [...termIds]
-          }
-          
-          newStates[index] = order
-          hasChanges = true
-        }
-      })
-      
-      return hasChanges ? newStates : prev
-    })
-  }, [questions, answers])
-
-  // Initialize answers for ordering questions that don't have an answer yet
-  useEffect(() => {
-    const updates = []
+    const stateUpdates = {}
+    const answerUpdates = []
     
     questions.forEach((question, index) => {
       if (question.type === 'ordering') {
-        const currentAnswer = answers[index]
         const termIds = question.termIds || []
+        const currentAnswer = answers[index]
         
-        // If no answer exists, initialize with the current ordering state or use termIds order
-        if (!currentAnswer || !currentAnswer.trim()) {
-          let order = orderingStates[index]
-          
-          // If ordering state doesn't exist yet or is invalid, use termIds order (already initialized based on order values)
-          if (!order || order.length !== termIds.length) {
+        // Determine initial order
+        let order
+        if (currentAnswer && currentAnswer.trim()) {
+          order = currentAnswer.split(',').map(id => id.trim()).filter(id => id)
+          if (order.length !== termIds.length) {
             order = [...termIds]
-            // Only update if this state doesn't exist (to avoid infinite loops)
-            if (!orderingStates[index]) {
-              updates.push({ index, order })
-            }
           }
-          
-          // Initialize the answer with the order
+        } else {
+          order = [...termIds]
+        }
+        
+        // Update ordering state if needed
+        if (!orderingStates[index] || JSON.stringify(orderingStates[index]) !== JSON.stringify(order)) {
+          stateUpdates[index] = order
+        }
+        
+        // Initialize answer if it doesn't exist
+        if (!currentAnswer || !currentAnswer.trim()) {
           if (order && order.length === termIds.length) {
-            handleAnswer(index, order.join(','))
+            answerUpdates.push({ index, answer: order.join(',') })
           }
         }
       }
     })
     
-    // Batch update ordering states to avoid multiple re-renders
-    if (updates.length > 0) {
-      setOrderingStates(prev => {
-        const newStates = { ...prev }
-        updates.forEach(({ index, order }) => {
-          if (!newStates[index]) {
-            newStates[index] = order
-          }
-        })
-        return newStates
-      })
+    // Batch update ordering states
+    if (Object.keys(stateUpdates).length > 0) {
+      setOrderingStates(prev => ({
+        ...prev,
+        ...stateUpdates
+      }))
     }
+    
+    // Initialize answers
+    answerUpdates.forEach(({ index, answer }) => {
+      handleAnswer(index, answer)
+    })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [questions, orderingStates])
+  }, [questions, answers])
 
   const renderQuestion = (question, index) => {
     const currentAnswer = answers[index]

@@ -135,8 +135,17 @@ class QuestionGenerator {
     let formatted = template
     
     // Handle {language} placeholder
-    if (replacements.language && formatted.includes('{language}')) {
-      formatted = formatted.replace('{language}', replacements.language.toLowerCase())
+    if (formatted.includes('{language}')) {
+      if (replacements.language) {
+        formatted = formatted.replace('{language}', replacements.language.toLowerCase())
+      } else {
+        // Remove the language placeholder and clean up the text if language is not available
+        // Replace "this {language} term" with "this term" or similar
+        formatted = formatted.replace(/\bthis\s+\{language\}\s+term\b/gi, 'this term')
+        formatted = formatted.replace(/\{language\}\s+/gi, '')
+        formatted = formatted.replace(/\s+\{language\}/gi, '')
+        formatted = formatted.replace(/\{language\}/g, '')
+      }
     }
     
     // Handle {term} placeholder
@@ -236,7 +245,8 @@ class QuestionGenerator {
     const language = this.getTermLanguage(term)
 
     // Get description array and randomly select one
-    let descriptionArray = languageSelected && format.descriptionWithLanguage
+    // Only use descriptionWithLanguage if language is actually available
+    let descriptionArray = languageSelected && format.descriptionWithLanguage && language
       ? format.descriptionWithLanguage
       : format.description
     
@@ -304,6 +314,7 @@ class QuestionGenerator {
     const language = this.getTermLanguage(term)
 
     // Get description array and randomly select one
+    // Only use descriptionWithLanguage if language is actually available
     let descriptionArray = languageSelected && format.descriptionWithLanguage && language
       ? format.descriptionWithLanguage
       : format.description

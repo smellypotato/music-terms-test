@@ -172,20 +172,6 @@ function Results({ questions, answers, onReset }) {
 
     return null
   }
-  const results = questions.map((question, index) => {
-    const userAnswer = answers[index]
-    const isCorrect = checkAnswer(question, userAnswer)
-    return {
-      question,
-      userAnswer,
-      isCorrect,
-      correctAnswer: question.correctAnswer
-    }
-  })
-
-  const correctCount = results.filter(r => r.isCorrect).length
-  const incorrectCount = results.length - correctCount
-  const percentage = Math.round((correctCount / results.length) * 100)
 
   // Helper function to compute correct order for ordering questions
   const getCorrectOrder = (question) => {
@@ -263,6 +249,25 @@ function Results({ questions, answers, onReset }) {
       return userAnswer === question.correctAnswer
     }
   }
+
+  const results = questions.map((question, index) => {
+    const userAnswer = answers[index]
+    const isCorrect = checkAnswer(question, userAnswer)
+    // For ordering questions, compute the correct answer on-demand
+    const correctAnswer = question.type === 'ordering' 
+      ? getCorrectOrder(question).join(',')
+      : question.correctAnswer
+    return {
+      question,
+      userAnswer,
+      isCorrect,
+      correctAnswer
+    }
+  })
+
+  const correctCount = results.filter(r => r.isCorrect).length
+  const incorrectCount = results.length - correctCount
+  const percentage = Math.round((correctCount / results.length) * 100)
 
   const formatOrderingAnswer = (answer, question) => {
     if (!answer) return '(No answer provided)'
