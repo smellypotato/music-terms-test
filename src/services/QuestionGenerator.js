@@ -121,10 +121,6 @@ class QuestionGenerator {
    * @param {string[]} selectedTags - Selected tag categories
    * @returns {boolean} True if Language tag is selected
    */
-  isLanguageSelected(selectedTags) {
-    return selectedTags.includes('Language')
-  }
-
   /**
    * Format question text with placeholders
    * @param {string} template - Question template
@@ -167,16 +163,6 @@ class QuestionGenerator {
   }
 
   /**
-   * Format question text with optional language (backward compatibility)
-   * @param {string} template - Question template
-   * @param {string|null} language - Language name or null
-   * @returns {string} Formatted question text
-   */
-  formatQuestionWithLanguage(template, language) {
-    return this.formatQuestion(template, { language })
-  }
-
-  /**
    * Generate a question based on format type
    * @param {Object} format - Question format object
    * @param {Array} availableTerms - Available terms to use
@@ -196,7 +182,7 @@ class QuestionGenerator {
     
     if (unusedTerms.length === 0) return null
 
-    const languageSelected = this.isLanguageSelected(selectedTags)
+    const languageSelected = selectedTags.includes('Language')
 
     switch (format.generate) {
       case 'term_to_definition':

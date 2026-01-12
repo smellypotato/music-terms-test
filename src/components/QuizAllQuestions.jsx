@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react'
 import './QuizAllQuestions.css'
 import Cheatsheet from './Cheatsheet'
+import OrderingQuestion from './OrderingQuestion'
+import MultipleChoiceQuestion from './MultipleChoiceQuestion'
+import ShortAnswerQuestion from './ShortAnswerQuestion'
 import musicTerms from '../data/musicTerms.json'
 import { getCanonicalTerm, hasAlias } from '../utils/termUtils'
 
 function QuizAllQuestions({ questions, answers, onAnswerChange, onSubmit, selectedTags = [], onBack }) {
   const [showCheatsheet, setShowCheatsheet] = useState(false)
-  const [orderingStates, setOrderingStates] = useState({})
   
   // Check for debug mode from query parameter
   const isDebugMode = new URLSearchParams(window.location.search).get('debug') === 'true'
@@ -36,78 +38,56 @@ function QuizAllQuestions({ questions, answers, onAnswerChange, onSubmit, select
   const handleAnswer = (questionIndex, answer) => {
     onAnswerChange(questionIndex, answer)
   }
-  
-  const getOrderingState = (questionIndex, termIds, currentAnswer) => {
-    if (orderingStates[questionIndex]) {
-      return orderingStates[questionIndex]
-    }
-    // Initialize with current answer or use the order from termIds (already initialized based on order values)
-    if (currentAnswer && currentAnswer.trim()) {
-      const order = currentAnswer.split(',').map(id => id.trim()).filter(id => id)
-      if (order.length === termIds.length) {
-        return order
+
+  // Parse answer string to order array for ordering questions
+  const getOrderFromAnswer = (answer, termIds) => {
+    if (answer && answer.trim()) {
+      const parsed = answer.split(',').map(id => id.trim()).filter(id => id)
+      if (parsed.length === termIds.length) {
+        return parsed
       }
     }
-    // Return termIds as-is (already in order based on order values from data)
+    // Return termIds as fallback (initial order from generation)
     return [...termIds]
   }
-  
-  const updateOrderingState = (questionIndex, newOrder) => {
-    setOrderingStates(prev => ({
-      ...prev,
-      [questionIndex]: newOrder
-    }))
+
+  // Handle order change for ordering questions
+  const handleOrderChange = (questionIndex, newOrder) => {
+    handleAnswer(questionIndex, newOrder.join(','))
   }
   
-  // Initialize ordering states and answers for all ordering questions
+  // Initialize answers for ordering questions that don't have an answer yet
   useEffect(() => {
-    const stateUpdates = {}
+    if (questions.length === 0) return
+    
     const answerUpdates = []
+    let needsUpdate = false
     
     questions.forEach((question, index) => {
       if (question.type === 'ordering') {
         const termIds = question.termIds || []
         const currentAnswer = answers[index]
         
-        // Determine initial order
-        let order
-        if (currentAnswer && currentAnswer.trim()) {
-          order = currentAnswer.split(',').map(id => id.trim()).filter(id => id)
-          if (order.length !== termIds.length) {
-            order = [...termIds]
-          }
-        } else {
-          order = [...termIds]
-        }
-        
-        // Update ordering state if needed
-        if (!orderingStates[index] || JSON.stringify(orderingStates[index]) !== JSON.stringify(order)) {
-          stateUpdates[index] = order
-        }
-        
-        // Initialize answer if it doesn't exist
+        // Initialize answer if it doesn't exist or is empty
         if (!currentAnswer || !currentAnswer.trim()) {
-          if (order && order.length === termIds.length) {
-            answerUpdates.push({ index, answer: order.join(',') })
+          if (termIds.length > 0) {
+            const initialAnswer = termIds.join(',')
+            answerUpdates.push({ index, answer: initialAnswer })
+            needsUpdate = true
           }
         }
       }
     })
     
-    // Batch update ordering states
-    if (Object.keys(stateUpdates).length > 0) {
-      setOrderingStates(prev => ({
-        ...prev,
-        ...stateUpdates
-      }))
+    // Batch all updates: apply all at once to avoid closure issues
+    if (needsUpdate && answerUpdates.length > 0) {
+      // Apply all updates - React will batch these since they're in the same effect
+      answerUpdates.forEach(({ index, answer }) => {
+        onAnswerChange(index, answer)
+      })
     }
-    
-    // Initialize answers
-    answerUpdates.forEach(({ index, answer }) => {
-      handleAnswer(index, answer)
-    })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [questions, answers])
+  }, [questions]) // Run when questions change
 
   const renderQuestion = (question, index) => {
     const currentAnswer = answers[index]
@@ -119,33 +99,15 @@ function QuizAllQuestions({ questions, answers, onAnswerChange, onSubmit, select
           <div key={index} className="all-questions-item">
             <div className="question-number">{index + 1}.</div>
             <div className="question-content">
-              <div className="question-text">
-                {question.question}
-                {isDebugMode && questionGrade !== null && (
-                  <span className="debug-grade"> [Grade {questionGrade}]</span>
-                )}
-              </div>
-              <div className="all-options">
-                {question.options.map((option, optIndex) => {
-                  const optionGrade = getOptionGrade(option, question)
-                  return (
-                    <label key={optIndex} className="all-option-label">
-                      <input
-                        type="radio"
-                        name={`question-${index}`}
-                        value={option}
-                        checked={currentAnswer === option}
-                        onChange={() => handleAnswer(index, option)}
-                      />
-                      <span className="option-letter">{String.fromCharCode(65 + optIndex)}.</span>
-                      <span>{option}</span>
-                      {isDebugMode && optionGrade !== null && (
-                        <span className="debug-grade"> [G{optionGrade}]</span>
-                      )}
-                    </label>
-                  )
-                })}
-              </div>
+              <MultipleChoiceQuestion
+                question={question}
+                answer={currentAnswer}
+                onAnswerChange={handleAnswer}
+                questionIndex={index}
+                isDebugMode={isDebugMode}
+                getOptionGrade={getOptionGrade}
+                questionGrade={questionGrade}
+              />
             </div>
           </div>
         )
@@ -156,18 +118,13 @@ function QuizAllQuestions({ questions, answers, onAnswerChange, onSubmit, select
           <div key={index} className="all-questions-item">
             <div className="question-number">{index + 1}.</div>
             <div className="question-content">
-              <div className="question-text">
-                {question.question}
-                {isDebugMode && shortAnswerGrade !== null && (
-                  <span className="debug-grade"> [Grade {shortAnswerGrade}]</span>
-                )}
-              </div>
-              <input
-                type="text"
-                value={currentAnswer || ''}
-                onChange={(e) => handleAnswer(index, e.target.value)}
-                className="all-short-answer-input"
-                placeholder="Enter your answer..."
+              <ShortAnswerQuestion
+                question={question}
+                answer={currentAnswer}
+                onAnswerChange={handleAnswer}
+                questionIndex={index}
+                isDebugMode={isDebugMode}
+                questionGrade={shortAnswerGrade}
               />
             </div>
           </div>
@@ -175,91 +132,19 @@ function QuizAllQuestions({ questions, answers, onAnswerChange, onSubmit, select
 
       case 'ordering':
         const termIds = question.termIds || []
-        const displayMap = question.displayMap || {}
-        const order = getOrderingState(index, termIds, currentAnswer)
-        // Get the highest grade from ordering terms for debug display
-        const orderingGrades = termIds.map(id => getTermGrade(id)).filter(g => g !== null)
-        const maxOrderingGrade = orderingGrades.length > 0 ? Math.max(...orderingGrades) : null
-        
-        // Determine ordering type from question text
-        const isTempo = question.question.toLowerCase().includes('tempo') || 
-                       question.question.toLowerCase().includes('slowest') || 
-                       question.question.toLowerCase().includes('fastest')
-        const isDynamics = question.question.toLowerCase().includes('dynamics') || 
-                          question.question.toLowerCase().includes('softest') || 
-                          question.question.toLowerCase().includes('loudest')
-        
-        const leftLabel = isTempo ? 'Slowest' : isDynamics ? 'Softest' : 'Lowest'
-        const rightLabel = isTempo ? 'Fastest' : isDynamics ? 'Loudest' : 'Highest'
-        
-        const handleSwap = (containerIndex, direction) => {
-          const newOrder = [...order]
-          if (direction === 'left' && containerIndex > 0) {
-            // Swap with left container
-            [newOrder[containerIndex], newOrder[containerIndex - 1]] = 
-            [newOrder[containerIndex - 1], newOrder[containerIndex]]
-          } else if (direction === 'right' && containerIndex < newOrder.length - 1) {
-            // Swap with right container
-            [newOrder[containerIndex], newOrder[containerIndex + 1]] = 
-            [newOrder[containerIndex + 1], newOrder[containerIndex]]
-          }
-          updateOrderingState(index, newOrder)
-          handleAnswer(index, newOrder.join(','))
-        }
-        
+        const order = getOrderFromAnswer(currentAnswer, termIds)
         return (
           <div key={index} className="all-questions-item">
             <div className="question-number">{index + 1}.</div>
             <div className="question-content">
-              <div className="question-text">
-                {question.question}
-                {isDebugMode && maxOrderingGrade !== null && (
-                  <span className="debug-grade"> [Grade {maxOrderingGrade}]</span>
-                )}
-              </div>
-              <div className="ordering-containers-wrapper">
-                <div className="ordering-label-left">{leftLabel}</div>
-                <div className="ordering-containers">
-                  {order.map((termId, containerIndex) => {
-                    const displayName = displayMap[termId] || termId
-                    const isLeftmost = containerIndex === 0
-                    const isRightmost = containerIndex === order.length - 1
-                    
-                    const termGrade = getTermGrade(termId)
-                    return (
-                      <div key={termId} className="ordering-container">
-                        {!isLeftmost && (
-                          <button
-                            type="button"
-                            onClick={() => handleSwap(containerIndex, 'left')}
-                            className="swap-button"
-                            title="Move left"
-                          >
-                            ←
-                          </button>
-                        )}
-                        <div className="ordering-term-display">
-                          {displayName}
-                          {isDebugMode && termGrade !== null && (
-                            <div className="debug-grade-bottom">Grade {termGrade}</div>
-                          )}
-                        </div>
-                        {!isRightmost && (
-                          <button
-                            type="button"
-                            onClick={() => handleSwap(containerIndex, 'right')}
-                            className="swap-button"
-                            title="Move right"
-                          >
-                            →
-                          </button>
-                        )}
-                      </div>
-                    )
-                  })}
-                </div>
-                <div className="ordering-label-right">{rightLabel}</div>
-              </div>
+              <OrderingQuestion
+                question={question}
+                order={order}
+                onOrderChange={(newOrder) => handleOrderChange(index, newOrder)}
+                questionIndex={index}
+                isDebugMode={isDebugMode}
+                getTermGrade={getTermGrade}
+              />
             </div>
           </div>
         )

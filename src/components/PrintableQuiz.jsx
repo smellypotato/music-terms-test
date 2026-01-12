@@ -2,58 +2,13 @@ import { useRef } from 'react'
 import html2pdf from 'html2pdf.js'
 import './PrintableQuiz.css'
 import musicTerms from '../data/musicTerms.json'
-import orderingData from '../data/orderingData.json'
-import { getCanonicalTerm } from '../utils/termUtils'
+import { findTermById } from '../utils/termUtils'
+import { getCorrectOrder } from '../utils/orderingUtils'
 
 function PrintableQuiz({ questions, answers, onAnswerChange, showAnswers = false }) {
-  // Helper function to find a term by ID
-  const findTermById = (id) => {
-    return musicTerms.find(term => term.id === id)
-  }
-
-  // Helper function to compute correct order for ordering questions
-  const getCorrectOrder = (question) => {
-    if (question.type !== 'ordering' || !question.termIds) return []
-    
-    const termIds = question.termIds
-    const terms = termIds.map(id => findTermById(id)).filter(t => t !== undefined)
-    
-    // Determine if it's tempo or dynamics from question text
-    const isTempo = question.question.toLowerCase().includes('tempo') || 
-                   question.question.toLowerCase().includes('slowest') || 
-                   question.question.toLowerCase().includes('fastest')
-    
-    if (isTempo) {
-      const tempoOrder = orderingData.tempo.order
-      const sorted = [...terms].sort((a, b) => {
-        const orderA = tempoOrder[a.id]?.order || 999
-        const orderB = tempoOrder[b.id]?.order || 999
-        return orderA - orderB
-      })
-      return sorted.map(t => t.id)
-    } else {
-      // Dynamics ordering
-      const dynamicsRules = orderingData.dynamics.rules
-      const getDynamicsOrder = (term) => {
-        for (const rule of dynamicsRules) {
-          const matchesRule = rule.ids.some(idObj => idObj.id === term.id)
-          if (matchesRule) {
-            const aliases = Array.isArray(term.term) ? term.term : [term.term]
-            const termLower = aliases.join(' ').toLowerCase()
-            const hasExclude = rule.exclude && rule.exclude.some(exclude => termLower.includes(exclude))
-            if (!hasExclude) {
-              return rule.order
-            }
-          }
-        }
-        return 999 // Should not happen if filtering is correct
-      }
-      const sorted = [...terms].sort((a, b) => {
-        return getDynamicsOrder(a) - getDynamicsOrder(b)
-      })
-      return sorted.map(t => t.id)
-    }
-  }
+  // Create bound helper functions
+  const findTermByIdBound = (id) => findTermById(musicTerms, id)
+  const getCorrectOrderBound = (question) => getCorrectOrder(question, musicTerms, findTermByIdBound)
   const printRef = useRef(null)
 
   const handlePrint = () => {
@@ -122,7 +77,7 @@ function PrintableQuiz({ questions, answers, onAnswerChange, showAnswers = false
         const termIds = question.termIds || []
         const displayMap = question.displayMap || {}
         const currentOrder = currentAnswer ? currentAnswer.split(',').map(id => id.trim()).filter(id => id) : []
-        const correctOrder = getCorrectOrder(question)
+        const correctOrder = getCorrectOrderBound(question)
 
         return (
           <div key={index} className="printable-question">

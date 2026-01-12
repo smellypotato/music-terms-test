@@ -22,9 +22,11 @@ function App() {
   }
 
   const handleAnswerChange = (questionIndex, answer) => {
-    const newAnswers = [...answers]
-    newAnswers[questionIndex] = answer
-    setAnswers(newAnswers)
+    setAnswers(prevAnswers => {
+      const newAnswers = [...prevAnswers]
+      newAnswers[questionIndex] = answer
+      return newAnswers
+    })
   }
 
   const handleSubmitQuiz = () => {
@@ -68,7 +70,7 @@ function App() {
             <button onClick={handleViewAnswerKey} className="action-button">
               🔑 View Answer Key
             </button>
-          </div>
+      </div>
           <QuizAllQuestions
             questions={questions}
             answers={answers}
@@ -94,16 +96,16 @@ function App() {
             {showAnswers && (
               <button onClick={() => setShowAnswers(false)} className="action-button">
                 📝 View Questions Only
-              </button>
+        </button>
             )}
-          </div>
+      </div>
           <PrintableQuiz
             questions={questions}
             answers={answers}
             onAnswerChange={handleAnswerChange}
             showAnswers={showAnswers}
           />
-        </>
+    </>
       )}
       
       {quizState === 'results' && (

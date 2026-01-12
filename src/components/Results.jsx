@@ -1,28 +1,13 @@
 import './Results.css'
 import musicTerms from '../data/musicTerms.json'
-import orderingData from '../data/orderingData.json'
-import { getCanonicalTerm, hasAlias } from '../utils/termUtils'
+import { getCanonicalTerm, hasAlias, findTermByAlias, findTermById, findTermByDefinition } from '../utils/termUtils'
+import { getCorrectOrder } from '../utils/orderingUtils'
 
 function Results({ questions, answers, onReset }) {
-  // Helper function to find a term by alias
-  const findTermByAlias = (alias) => {
-    return musicTerms.find(term => {
-      const aliases = Array.isArray(term.term) ? term.term : [term.term]
-      return aliases.some(a => a.toLowerCase() === alias.toLowerCase())
-    })
-  }
-
-  // Helper function to find a term by ID
-  const findTermById = (id) => {
-    return musicTerms.find(term => term.id === id)
-  }
-
-  // Helper function to find a term by definition
-  const findTermByDefinition = (definition) => {
-    return musicTerms.find(term => 
-      term.definition.toLowerCase() === definition.toLowerCase()
-    )
-  }
+  // Create bound helper functions
+  const findTermByAliasBound = (alias) => findTermByAlias(musicTerms, alias)
+  const findTermByIdBound = (id) => findTermById(musicTerms, id)
+  const findTermByDefinitionBound = (definition) => findTermByDefinition(musicTerms, definition)
 
   // Helper function to get definition display for a question
   const getDefinitionDisplay = (question, userAnswer, isCorrect) => {
@@ -31,7 +16,7 @@ function Results({ questions, answers, onReset }) {
 
     // 1. term_to_definition_mc: if incorrect and non-empty, show the term related to the incorrect answer
     if (formatId === 'term_to_definition_mc' && !isCorrect && userAnswer && userAnswer.trim()) {
-      const incorrectTerm = findTermByDefinition(userAnswer)
+      const incorrectTerm = findTermByDefinitionBound(userAnswer)
       if (incorrectTerm) {
         const termAlias = Array.isArray(incorrectTerm.term) ? incorrectTerm.term[0] : incorrectTerm.term
         return {
@@ -43,7 +28,7 @@ function Results({ questions, answers, onReset }) {
 
     // 2. definition_to_term_mc: if incorrect and non-empty, show definition of incorrect answer term
     if (formatId === 'definition_to_term_mc' && !isCorrect && userAnswer && userAnswer.trim()) {
-      const incorrectTerm = findTermByAlias(userAnswer)
+      const incorrectTerm = findTermByAliasBound(userAnswer)
       if (incorrectTerm) {
         return {
           title: 'Definition of your selected answer:',
@@ -55,7 +40,7 @@ function Results({ questions, answers, onReset }) {
     // 3. tempo_ordering: show definition of each term
     if (formatId === 'tempo_ordering' && question.termIds && question.displayMap) {
       const definitions = question.termIds.map(termId => {
-        const term = findTermById(termId)
+        const term = findTermByIdBound(termId)
         return {
           term: question.displayMap[termId] || termId,
           definition: term ? term.definition : 'Definition not found'
@@ -70,7 +55,7 @@ function Results({ questions, answers, onReset }) {
     // 4. dynamics_ordering: show definition of each term
     if (formatId === 'dynamics_ordering' && question.termIds && question.displayMap) {
       const definitions = question.termIds.map(termId => {
-        const term = findTermById(termId)
+        const term = findTermByIdBound(termId)
         return {
           term: question.displayMap[termId] || termId,
           definition: term ? term.definition : 'Definition not found'
@@ -84,9 +69,9 @@ function Results({ questions, answers, onReset }) {
 
     // 5. similar_terms_comparison: if incorrect, show definition of question term, correct term, and incorrect term
     if (formatId === 'similar_terms_comparison' && !isCorrect) {
-      const questionTermObj = question.questionTerm ? findTermByAlias(question.questionTerm) : null
-      const correctTermObj = question.correctAnswer ? findTermByAlias(question.correctAnswer) : null
-      const incorrectTermObj = userAnswer ? findTermByAlias(userAnswer) : null
+      const questionTermObj = question.questionTerm ? findTermByAliasBound(question.questionTerm) : null
+      const correctTermObj = question.correctAnswer ? findTermByAliasBound(question.correctAnswer) : null
+      const incorrectTermObj = userAnswer ? findTermByAliasBound(userAnswer) : null
       
       const definitions = []
       if (questionTermObj && question.questionTerm) {
@@ -106,9 +91,9 @@ function Results({ questions, answers, onReset }) {
 
     // 6. opposite_terms: if incorrect, show definition of question term, correct term, and incorrect term
     if (formatId === 'opposite_terms' && !isCorrect) {
-      const questionTermObj = question.questionTerm ? findTermByAlias(question.questionTerm) : null
-      const correctTermObj = question.correctAnswer ? findTermByAlias(question.correctAnswer) : null
-      const incorrectTermObj = userAnswer ? findTermByAlias(userAnswer) : null
+      const questionTermObj = question.questionTerm ? findTermByAliasBound(question.questionTerm) : null
+      const correctTermObj = question.correctAnswer ? findTermByAliasBound(question.correctAnswer) : null
+      const incorrectTermObj = userAnswer ? findTermByAliasBound(userAnswer) : null
       
       const definitions = []
       if (questionTermObj && question.questionTerm) {
@@ -128,7 +113,7 @@ function Results({ questions, answers, onReset }) {
 
     // 7. tag_classification: if incorrect, show definition of question term
     if (formatId === 'tag_classification' && !isCorrect) {
-      const questionTermObj = question.questionTerm ? findTermByAlias(question.questionTerm) : null
+      const questionTermObj = question.questionTerm ? findTermByAliasBound(question.questionTerm) : null
       if (questionTermObj && question.questionTerm) {
         return {
           title: 'Definition of the term:',
@@ -139,7 +124,7 @@ function Results({ questions, answers, onReset }) {
 
     // 8. context_application: if incorrect, show definition of incorrect term
     if (formatId === 'context_application' && !isCorrect && userAnswer && userAnswer.trim()) {
-      const incorrectTerm = findTermByAlias(userAnswer)
+      const incorrectTerm = findTermByAliasBound(userAnswer)
       if (incorrectTerm) {
         return {
           title: 'Definition of your selected answer:',
@@ -150,7 +135,7 @@ function Results({ questions, answers, onReset }) {
 
     // 9. language_identification: show definition of term in question (only when incorrect)
     if (formatId === 'language_identification' && !isCorrect) {
-      const questionTermObj = question.questionTerm ? findTermByAlias(question.questionTerm) : null
+      const questionTermObj = question.questionTerm ? findTermByAliasBound(question.questionTerm) : null
       if (questionTermObj && question.questionTerm) {
         return {
           title: 'Definition of the term:',
@@ -161,7 +146,7 @@ function Results({ questions, answers, onReset }) {
 
     // 10. same_language_term: if incorrect, show definition of incorrect term
     if (formatId === 'same_language_term' && !isCorrect && userAnswer && userAnswer.trim()) {
-      const incorrectTerm = findTermByAlias(userAnswer)
+      const incorrectTerm = findTermByAliasBound(userAnswer)
       if (incorrectTerm) {
         return {
           title: 'Definition of your selected answer:',
@@ -174,45 +159,18 @@ function Results({ questions, answers, onReset }) {
   }
 
   // Helper function to compute correct order for ordering questions
-  const getCorrectOrder = (question) => {
-    if (question.type !== 'ordering' || !question.termIds) return []
-    
-    const termIds = question.termIds
-    const terms = termIds.map(id => findTermById(id)).filter(t => t !== undefined)
-    
-    // Determine if it's tempo or dynamics from question text
-    const isTempo = question.question.toLowerCase().includes('tempo') || 
-                   question.question.toLowerCase().includes('slowest') || 
-                   question.question.toLowerCase().includes('fastest')
-    
-    if (isTempo) {
-      const tempoOrder = orderingData.tempo.order
-      const sorted = [...terms].sort((a, b) => {
-        // All terms should have order values since they were filtered during generation
-        return tempoOrder[a.id].order - tempoOrder[b.id].order
-      })
-      return sorted.map(t => t.id)
-    } else {
-      // Dynamics ordering
-      const dynamicsRules = orderingData.dynamics.rules
-      const getDynamicsOrder = (term) => {
-        for (const rule of dynamicsRules) {
-          const matchesRule = rule.ids.some(idObj => idObj.id === term.id)
-          if (matchesRule) {
-            const aliases = Array.isArray(term.term) ? term.term : [term.term]
-            const termLower = aliases.join(' ').toLowerCase()
-            const hasExclude = rule.exclude && rule.exclude.some(exclude => termLower.includes(exclude))
-            if (!hasExclude) {
-              return rule.order
-            }
-          }
-        }
-        return 999 // Should not happen if filtering is correct
+  const getCorrectOrderBound = (question) => {
+    try {
+      const result = getCorrectOrder(question, musicTerms, findTermByIdBound)
+      // Ensure we have valid term IDs
+      if (!result || result.length === 0) {
+        console.warn('getCorrectOrder returned empty array for question:', question)
+        return []
       }
-      const sorted = [...terms].sort((a, b) => {
-        return getDynamicsOrder(a) - getDynamicsOrder(b)
-      })
-      return sorted.map(t => t.id)
+      return result
+    } catch (error) {
+      console.error('Error in getCorrectOrderBound:', error, question)
+      return []
     }
   }
 
@@ -220,8 +178,8 @@ function Results({ questions, answers, onReset }) {
   const getCorrectTerm = (question) => {
     if (question.type !== 'ordering' || !question.termIds) return null
     
-    const correctOrderIds = getCorrectOrder(question)
-    const correctTerms = correctOrderIds.map(id => findTermById(id)).filter(t => t !== undefined)
+    const correctOrderIds = getCorrectOrderBound(question)
+    const correctTerms = correctOrderIds.map(id => findTermByIdBound(id)).filter(t => t !== undefined)
     return correctTerms.map(t => getCanonicalTerm(t)).join(', ')
   }
 
@@ -230,7 +188,7 @@ function Results({ questions, answers, onReset }) {
 
     if (question.type === 'ordering') {
       const userOrder = userAnswer.split(',').map(s => s.trim()).filter(s => s)
-      const correctOrder = getCorrectOrder(question)
+      const correctOrder = getCorrectOrderBound(question)
       return JSON.stringify(userOrder) === JSON.stringify(correctOrder)
     } else if (question.type === 'short_answer') {
       const userLower = userAnswer.toLowerCase().trim()
@@ -254,9 +212,19 @@ function Results({ questions, answers, onReset }) {
     const userAnswer = answers[index]
     const isCorrect = checkAnswer(question, userAnswer)
     // For ordering questions, compute the correct answer on-demand
-    const correctAnswer = question.type === 'ordering' 
-      ? getCorrectOrder(question).join(',')
-      : question.correctAnswer
+    let correctAnswer
+    if (question.type === 'ordering') {
+      const correctOrderIds = getCorrectOrderBound(question)
+      if (correctOrderIds && correctOrderIds.length > 0) {
+        correctAnswer = correctOrderIds.join(',')
+      } else {
+        // Fallback: use termIds if computation fails (shouldn't happen, but safety check)
+        console.warn('Could not compute correct order, using termIds as fallback:', question.termIds)
+        correctAnswer = question.termIds ? question.termIds.join(',') : ''
+      }
+    } else {
+      correctAnswer = question.correctAnswer
+    }
     return {
       question,
       userAnswer,
@@ -270,10 +238,11 @@ function Results({ questions, answers, onReset }) {
   const percentage = Math.round((correctCount / results.length) * 100)
 
   const formatOrderingAnswer = (answer, question) => {
-    if (!answer) return '(No answer provided)'
-    if (question.type !== 'ordering' || !question.displayMap) return answer
+    if (!answer || !answer.trim()) return '(No answer provided)'
+    if (question.type !== 'ordering' || !question.displayMap) return answer || '(No answer provided)'
     
     const termIds = answer.split(',').map(s => s.trim()).filter(s => s)
+    if (termIds.length === 0) return '(No answer provided)'
     return termIds.map((id, idx) => `${idx + 1}. ${question.displayMap[id] || id}`).join(', ')
   }
 
@@ -483,8 +452,8 @@ function Results({ questions, answers, onReset }) {
                         <strong>Correct Answer:</strong>{' '}
                         <span className="correct-text">
                           {result.question.type === 'ordering'
-                            ? formatOrderingAnswer(result.correctAnswer, result.question)
-                            : result.correctAnswer}
+                            ? formatOrderingAnswer(result.correctAnswer || '', result.question)
+                            : (result.correctAnswer || '(No correct answer)')}
                         </span>
                         {correctAnswerDefinition && (
                           <span className="inline-definition"> — {correctAnswerDefinition}</span>

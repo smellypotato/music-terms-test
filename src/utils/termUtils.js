@@ -44,3 +44,37 @@ export const hasAlias = (termObj, alias) => {
   return aliases.includes(alias)
 }
 
+/**
+ * Find a term by its alias
+ * @param {Array} musicTerms - Array of all music terms
+ * @param {string} alias - Alias to search for
+ * @returns {Object|null} Term object or null if not found
+ */
+export const findTermByAlias = (musicTerms, alias) => {
+  return musicTerms.find(term => {
+    const aliases = Array.isArray(term.term) ? term.term : [term.term]
+    return aliases.some(a => a.toLowerCase() === alias.toLowerCase())
+  })
+}
+
+/**
+ * Find a term by its ID
+ * @param {Array} musicTerms - Array of all music terms
+ * @param {string} id - Term ID to search for
+ * @returns {Object|null} Term object or null if not found
+ */
+export const findTermById = (musicTerms, id) => {
+  return musicTerms.find(term => term.id === id)
+}
+
+/**
+ * Find a term by its definition
+ * @param {Array} musicTerms - Array of all music terms
+ * @param {string} definition - Definition to search for
+ * @returns {Object|null} Term object or null if not found
+ */
+export const findTermByDefinition = (musicTerms, definition) => {
+  return musicTerms.find(term => 
+    term.definition.toLowerCase() === definition.toLowerCase()
+  )
+}
