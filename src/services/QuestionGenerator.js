@@ -259,19 +259,29 @@ class QuestionGenerator {
     })
 
     if (isMultipleChoice) {
-      const wrongAnswers = gradeFilteredTerms
+      const correctAnswerId = term.id
+      const wrongAnswerTerms = gradeFilteredTerms
         .filter(t => t.definition !== correctAnswer)
         .sort(() => Math.random() - 0.5)
         .slice(0, 3)
-        .map(t => t.definition)
       
-      const options = [correctAnswer, ...wrongAnswers].sort(() => Math.random() - 0.5)
+      // Create options with definitions and map to IDs
+      const optionTerms = [term, ...wrongAnswerTerms].sort(() => Math.random() - 0.5)
+      const options = []
+      const optionToIdMap = {}
+      
+      optionTerms.forEach(optionTerm => {
+        options.push(optionTerm.definition)
+        optionToIdMap[optionTerm.definition] = optionTerm.id
+      })
       
       return {
         type: 'multiple_choice',
         question: questionText,
         options,
-        correctAnswer,
+        correctAnswer, // Definition string for display
+        correctAnswerId, // Term ID for matching
+        optionToIdMap, // Map from definition to term ID
         correctTerm: canonicalTerm
       }
     } else {
@@ -316,19 +326,34 @@ class QuestionGenerator {
     })
 
     if (isMultipleChoice) {
-      const wrongAnswers = gradeFilteredTerms
+      const correctAnswerId = term.id
+      const wrongAnswerTerms = gradeFilteredTerms
         .filter(t => !termsMatch(t, term))
         .sort(() => Math.random() - 0.5)
         .slice(0, 3)
-        .map(t => getRandomAlias(t))
       
-      const options = [displayAlias, ...wrongAnswers].sort(() => Math.random() - 0.5)
+      // Create options with displayed aliases and map to IDs
+      const optionTerms = [term, ...wrongAnswerTerms].sort(() => Math.random() - 0.5)
+      const options = []
+      const optionToIdMap = {}
+      let correctAnswerDisplay = null
+      
+      optionTerms.forEach(optionTerm => {
+        const displayedAlias = getRandomAlias(optionTerm)
+        options.push(displayedAlias)
+        optionToIdMap[displayedAlias] = optionTerm.id
+        if (optionTerm.id === correctAnswerId) {
+          correctAnswerDisplay = displayedAlias
+        }
+      })
       
       return {
         type: 'multiple_choice',
         question: questionText,
         options,
-        correctAnswer: displayAlias,
+        correctAnswer: correctAnswerDisplay,
+        correctAnswerId,
+        optionToIdMap,
         correctTerm: canonicalTerm
       }
     } else {
@@ -350,36 +375,32 @@ class QuestionGenerator {
 
     const tempoOrder = this.orderingData.tempo.order
 
-    const selectedTerms = tempoTerms
-      .filter(t => {
-        const firstAlias = getCanonicalTerm(t).toLowerCase()
-        return Object.keys(tempoOrder).some(key => firstAlias.includes(key))
-      })
+    // Select terms that have explicit order values
+    const availableTerms = tempoTerms.filter(t => {
+      return tempoOrder.hasOwnProperty(t.id)
+    })
+    
+    if (availableTerms.length < 3) return null
+
+    // Randomly select 4 terms
+    const selectedTerms = availableTerms
       .sort(() => Math.random() - 0.5)
       .slice(0, 4)
 
     if (selectedTerms.length < 3) return null
 
     const getTempoOrder = (term) => {
-      const firstAlias = getCanonicalTerm(term).toLowerCase()
-      for (const [key, value] of Object.entries(tempoOrder)) {
-        if (firstAlias.includes(key)) return value
-      }
-      return 5
+      return tempoOrder[term.id]?.order
     }
 
-    const correctOrder = [...selectedTerms].sort((a, b) => {
-      return getTempoOrder(a) - getTempoOrder(b)
-    })
-
-    // Store term IDs (canonical terms) for ordering
-    const termIds = selectedTerms.map(t => getCanonicalTerm(t))
-    const correctOrderIds = correctOrder.map(t => getCanonicalTerm(t))
+    // Randomly shuffle the selected terms for initial display
+    const shuffledTerms = [...selectedTerms].sort(() => Math.random() - 0.5)
+    const termIds = shuffledTerms.map(t => t.id)
     
     // Create display mapping with random aliases
     const displayMap = {}
     selectedTerms.forEach(t => {
-      displayMap[getCanonicalTerm(t)] = getRandomAlias(t)
+      displayMap[t.id] = getRandomAlias(t)
     })
 
     // Get description array and randomly select one
@@ -394,10 +415,7 @@ class QuestionGenerator {
       type: 'ordering',
       question: questionText,
       termIds,
-      displayMap,
-      correctOrderIds,
-      correctAnswer: correctOrderIds.join(','),
-      correctTerm: correctOrderIds.join(',')
+      displayMap
     }
   }
 
@@ -406,18 +424,18 @@ class QuestionGenerator {
    */
   generateDynamicsOrdering(allTerms, format) {
     const dynamicsRules = this.orderingData.dynamics.rules
-    const defaultOrder = this.orderingData.dynamics.defaultOrder
 
     // Only include terms that match the ordering rules (fixed dynamics only)
     const availableDynamicsTerms = allTerms.filter(t => {
       if (!t.tags.includes('Dynamics')) return false
-      const aliases = Array.isArray(t.term) ? t.term : [t.term]
-      const termLower = aliases.join(' ').toLowerCase()
       
-      // Check if term matches any rule (and doesn't match exclude patterns)
+      // Check if term ID matches any rule
       for (const rule of dynamicsRules) {
-        const hasKeyword = rule.keywords.some(keyword => termLower.includes(keyword))
-        if (hasKeyword) {
+        const matchesRule = rule.ids.some(idObj => idObj.id === t.id)
+        if (matchesRule) {
+          // Check exclude patterns
+          const aliases = Array.isArray(t.term) ? t.term : [t.term]
+          const termLower = aliases.join(' ').toLowerCase()
           const hasExclude = rule.exclude && rule.exclude.some(exclude => termLower.includes(exclude))
           if (!hasExclude) {
             return true // This term matches a rule, include it
@@ -430,39 +448,35 @@ class QuestionGenerator {
     if (availableDynamicsTerms.length < 3) return null
 
     const getDynamicsOrder = (term) => {
-      const aliases = Array.isArray(term.term) ? term.term : [term.term]
-      const termLower = aliases.join(' ').toLowerCase()
-      
       for (const rule of dynamicsRules) {
-        const hasKeyword = rule.keywords.some(keyword => termLower.includes(keyword))
-        if (hasKeyword) {
+        const matchesRule = rule.ids.some(idObj => idObj.id === term.id)
+        if (matchesRule) {
+          const aliases = Array.isArray(term.term) ? term.term : [term.term]
+          const termLower = aliases.join(' ').toLowerCase()
           const hasExclude = rule.exclude && rule.exclude.some(exclude => termLower.includes(exclude))
           if (!hasExclude) {
             return rule.order
           }
         }
       }
-      return defaultOrder // Should not happen if filtering is correct
+      return null // Should not happen if filtering is correct
     }
 
+    // Randomly select 4 terms
     const selectedTerms = availableDynamicsTerms
       .sort(() => Math.random() - 0.5)
       .slice(0, 4)
 
     if (selectedTerms.length < 3) return null
 
-    const correctOrder = [...selectedTerms].sort((a, b) => {
-      return getDynamicsOrder(a) - getDynamicsOrder(b)
-    })
-
-    // Store term IDs (canonical terms) for ordering
-    const termIds = selectedTerms.map(t => getCanonicalTerm(t))
-    const correctOrderIds = correctOrder.map(t => getCanonicalTerm(t))
+    // Randomly shuffle the selected terms for initial display
+    const shuffledTerms = [...selectedTerms].sort(() => Math.random() - 0.5)
+    const termIds = shuffledTerms.map(t => t.id)
     
     // Create display mapping with random aliases
     const displayMap = {}
     selectedTerms.forEach(t => {
-      displayMap[getCanonicalTerm(t)] = getRandomAlias(t)
+      displayMap[t.id] = getRandomAlias(t)
     })
 
     // Get description array and randomly select one
@@ -477,10 +491,7 @@ class QuestionGenerator {
       type: 'ordering',
       question: questionText,
       termIds,
-      displayMap,
-      correctOrderIds,
-      correctAnswer: correctOrderIds.join(','),
-      correctTerm: correctOrderIds.join(',')
+      displayMap
     }
   }
 
@@ -507,23 +518,37 @@ class QuestionGenerator {
 
     // Select one of the similar terms as the correct answer
     const correctSimilarTerm = similarTerms[0]
-    const correctAnswerAlias = getRandomAlias(correctSimilarTerm)
+    const correctAnswerId = correctSimilarTerm.id
     const correctAnswerCanonical = getCanonicalTerm(correctSimilarTerm)
 
     // Use only similar terms as options (excluding the original term)
     const otherSimilarTerms = similarTerms.slice(1)
     
     // If we don't have enough similar terms, add some unrelated terms as distractors
-    let options = [correctSimilarTerm, ...otherSimilarTerms]
-    if (options.length < 4) {
+    let optionTerms = [correctSimilarTerm, ...otherSimilarTerms]
+    if (optionTerms.length < 4) {
       const unrelatedTerms = gradeFilteredTerms
         .filter(t => !termsMatch(t, term) && !similarTerms.some(st => termsMatch(t, st)))
         .sort(() => Math.random() - 0.5)
-        .slice(0, 4 - options.length)
-      options = [...options, ...unrelatedTerms]
+        .slice(0, 4 - optionTerms.length)
+      optionTerms = [...optionTerms, ...unrelatedTerms]
     }
     
-    options = options.sort(() => Math.random() - 0.5)
+    optionTerms = optionTerms.sort(() => Math.random() - 0.5)
+    
+    // Create options with displayed aliases and map to IDs
+    const options = []
+    const optionToIdMap = {}
+    let correctAnswerDisplay = null
+    
+    optionTerms.forEach(optionTerm => {
+      const displayedAlias = getRandomAlias(optionTerm)
+      options.push(displayedAlias)
+      optionToIdMap[displayedAlias] = optionTerm.id
+      if (optionTerm.id === correctAnswerId) {
+        correctAnswerDisplay = displayedAlias
+      }
+    })
     
     // Get description array and randomly select one
     if (!format || !format.description || !Array.isArray(format.description) || format.description.length === 0) {
@@ -536,8 +561,10 @@ class QuestionGenerator {
     return {
       type: 'multiple_choice',
       question: questionText,
-      options: options.map(t => getRandomAlias(t)),
-      correctAnswer: correctAnswerAlias,
+      options,
+      correctAnswer: correctAnswerDisplay, // Display the alias that was shown
+      correctAnswerId, // Store ID for matching
+      optionToIdMap, // Map from displayed alias to term ID
       correctTerm: correctAnswerCanonical,
       questionTerm: displayAlias,
       questionTermCanonical: canonicalTerm
@@ -551,29 +578,41 @@ class QuestionGenerator {
     const opposites = this.compareTerms.opposite
 
     const availableOpposites = opposites.filter(pair => {
-      const termObj = terms.find(t => hasAlias(t, pair.termAlias))
-      const oppositeObj = gradeFilteredTerms.find(t => hasAlias(t, pair.oppositeAlias))
+      const termObj = terms.find(t => t.id === pair.termId)
+      const oppositeObj = gradeFilteredTerms.find(t => t.id === pair.oppositeId)
       return termObj && oppositeObj
     })
 
     if (availableOpposites.length === 0) return null
 
     const pair = availableOpposites[Math.floor(Math.random() * availableOpposites.length)]
-    const term = terms.find(t => hasAlias(t, pair.termAlias))
-    const oppositeTerm = gradeFilteredTerms.find(t => hasAlias(t, pair.oppositeAlias))
+    const term = terms.find(t => t.id === pair.termId)
+    const oppositeTerm = gradeFilteredTerms.find(t => t.id === pair.oppositeId)
 
     if (!term || !oppositeTerm) return null
 
     const displayAlias = getRandomAlias(term)
-    const oppositeDisplayAlias = getRandomAlias(oppositeTerm)
+    const oppositeId = oppositeTerm.id
 
-    const wrongAnswers = gradeFilteredTerms
-      .filter(t => !termsMatch(t, oppositeTerm) && !termsMatch(t, term))
+    const wrongAnswerTerms = gradeFilteredTerms
+      .filter(t => t.id !== oppositeId && t.id !== term.id)
       .sort(() => Math.random() - 0.5)
       .slice(0, 3)
-      .map(t => getRandomAlias(t))
 
-    const options = [oppositeDisplayAlias, ...wrongAnswers].sort(() => Math.random() - 0.5)
+    // Create options with displayed aliases and map to IDs
+    const optionTerms = [oppositeTerm, ...wrongAnswerTerms].sort(() => Math.random() - 0.5)
+    const options = []
+    const optionToIdMap = {}
+    let correctAnswerDisplay = null
+    
+    optionTerms.forEach(optionTerm => {
+      const displayedAlias = getRandomAlias(optionTerm)
+      options.push(displayedAlias)
+      optionToIdMap[displayedAlias] = optionTerm.id
+      if (optionTerm.id === oppositeId) {
+        correctAnswerDisplay = displayedAlias
+      }
+    })
 
     // Get description array and randomly select one
     if (!format || !format.description || !Array.isArray(format.description) || format.description.length === 0) {
@@ -587,7 +626,9 @@ class QuestionGenerator {
       type: 'multiple_choice',
       question: questionText,
       options,
-      correctAnswer: oppositeDisplayAlias,
+      correctAnswer: correctAnswerDisplay,
+      correctAnswerId: oppositeId,
+      optionToIdMap,
       correctTerm: getCanonicalTerm(oppositeTerm),
       questionTerm: displayAlias,
       questionTermCanonical: getCanonicalTerm(term)
@@ -677,13 +718,26 @@ class QuestionGenerator {
     const displayAlias = getRandomAlias(correctTerm)
     const language = this.getTermLanguage(correctTerm)
 
-    const wrongAnswers = gradeFilteredTerms
+    const correctAnswerId = correctTerm.id
+    const wrongAnswerTerms = gradeFilteredTerms
       .filter(t => !context.termAliases.some(alias => hasAlias(t, alias)))
       .sort(() => Math.random() - 0.5)
       .slice(0, 3)
-      .map(t => getRandomAlias(t))
 
-    const options = [displayAlias, ...wrongAnswers].sort(() => Math.random() - 0.5)
+    // Create options with displayed aliases and map to IDs
+    const optionTerms = [correctTerm, ...wrongAnswerTerms].sort(() => Math.random() - 0.5)
+    const options = []
+    const optionToIdMap = {}
+    let correctAnswerDisplay = null
+    
+    optionTerms.forEach(optionTerm => {
+      const displayedAlias = getRandomAlias(optionTerm)
+      options.push(displayedAlias)
+      optionToIdMap[displayedAlias] = optionTerm.id
+      if (optionTerm.id === correctAnswerId) {
+        correctAnswerDisplay = displayedAlias
+      }
+    })
 
     // Get description array and randomly select one
     let descriptionArray = languageSelected && format.descriptionWithLanguage && language
@@ -712,7 +766,9 @@ class QuestionGenerator {
       type: 'multiple_choice',
       question: questionText,
       options,
-      correctAnswer: displayAlias,
+      correctAnswer: correctAnswerDisplay,
+      correctAnswerId,
+      optionToIdMap,
       correctTerm: getCanonicalTerm(correctTerm)
     }
   }
@@ -779,13 +835,26 @@ class QuestionGenerator {
 
     if (sameLanguageTerms.length < 3) return null
 
+    const correctAnswerId = term.id
     // Select 3 wrong answers from same language terms
-    const wrongAnswers = sameLanguageTerms
+    const wrongAnswerTerms = sameLanguageTerms
       .sort(() => Math.random() - 0.5)
       .slice(0, 3)
-      .map(t => getRandomAlias(t))
 
-    const options = [displayAlias, ...wrongAnswers].sort(() => Math.random() - 0.5)
+    // Create options with displayed aliases and map to IDs
+    const optionTerms = [term, ...wrongAnswerTerms].sort(() => Math.random() - 0.5)
+    const options = []
+    const optionToIdMap = {}
+    let correctAnswerDisplay = null
+    
+    optionTerms.forEach(optionTerm => {
+      const displayedAlias = getRandomAlias(optionTerm)
+      options.push(displayedAlias)
+      optionToIdMap[displayedAlias] = optionTerm.id
+      if (optionTerm.id === correctAnswerId) {
+        correctAnswerDisplay = displayedAlias
+      }
+    })
 
     // Get description array and randomly select one
     if (!format || !format.description || !Array.isArray(format.description) || format.description.length === 0) {
@@ -803,7 +872,9 @@ class QuestionGenerator {
       type: 'multiple_choice',
       question: questionText,
       options,
-      correctAnswer: displayAlias,
+      correctAnswer: correctAnswerDisplay,
+      correctAnswerId,
+      optionToIdMap,
       correctTerm: canonicalTerm
     }
   }

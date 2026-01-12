@@ -1,167 +1,2045 @@
 [
-  {"term": ["a tempo"], "definition": "return to the original tempo", "tags": ["Tempo", "Italian"], "grade": 1},
-  {"term": ["accelerando", "accel."], "definition": "becoming quicker", "tags": ["Tempo", "Italian"], "grade": 1},
-  {"term": ["accent"], "definition": "stressed note or chord", "tags": ["Articulation"], "grade": 999},
-  {"term": ["adagio"], "definition": "a slow tempo", "tags": ["Tempo", "Italian"], "grade": 1},
-  {"term": ["ad libitum", "ad lib."], "definition": "at choice", "tags": ["Style/Expression", "Latin"], "grade": 5},
-  {"term": ["agitato"], "definition": "agitated", "tags": ["Style/Expression", "Italian"], "grade": 3},
-  {"term": ["allargando"], "definition": "broadening, becoming slower", "tags": ["Tempo", "Style/Expression", "Italian"], "grade": 2},
-  {"term": ["allegretto"], "definition": "fairly fast (slower than allegro)", "tags": ["Tempo", "Italian"], "grade": 1},
-  {"term": ["allegro"], "definition": "fast", "tags": ["Tempo", "Italian"], "grade": 1},
-  {"term": ["andante"], "definition": "moderately slow; at a walking pace", "tags": ["Tempo", "Italian"], "grade": 1},
-  {"term": ["andantino"], "definition": "slightly faster than andante (but may also mean slightly slower)", "tags": ["Tempo", "Italian"], "grade": 3},
-  {"term": ["animato"], "definition": "animated, lively", "tags": ["Style/Expression", "Italian"], "grade": 3},
-  {"term": ["arco"], "definition": "play with the bow (only used if the player has previously been instructed to pluck)", "tags": ["Technique/Instruction", "Italian"], "grade": 4},
-  {"term": ["assai"], "definition": "very (allegro assai - very quick)", "tags": ["Qualifier", "Italian"], "grade": 4},
-  {"term": ["attacca"], "definition": "go straight on (to the next part of the music)", "tags": ["Technique/Instruction", "Italian"], "grade": 5},
-  {"term": ["ben", "bene"], "definition": "well", "tags": ["Qualifier", "Italian"], "grade": 3},
-  {"term": ["bewegt"], "definition": "agitated, excited", "tags": ["Style/Expression", "German"], "grade": 999},
-  {"term": ["brillante"], "definition": "brilliant", "tags": ["Style/Expression", "Italian"], "grade": 999},
-  {"term": ["calando"], "definition": "becoming slower and softer", "tags": ["Tempo", "Dynamics", "Italian"], "grade": 999},
-  {"term": ["cantabile"], "definition": "in a singing style", "tags": ["Style/Expression", "Italian"], "grade": 1},
-  {"term": ["cedez"], "definition": "yield; hold the tempo back", "tags": ["Tempo", "French"], "grade": 999},
-  {"term": ["cluster"], "definition": "chord of adjacent notes", "tags": ["Theory/Harmony"], "grade": 999},
-  {"term": ["col", "coll'", "colla", "colle"], "definition": "with", "tags": ["Qualifier", "Italian"], "grade": 2},
-  {"term": ["con"], "definition": "with", "tags": ["Qualifier", "Italian"], "grade": 2},
-  {"term": ["con brio"], "definition": "with vigour, lively", "tags": ["Style/Expression", "Italian"], "grade": 4},
-  {"term": ["con espressione"], "definition": "with expression", "tags": ["Style/Expression", "Italian"], "grade": 999},
-  {"term": ["con fuoco"], "definition": "with fire", "tags": ["Style/Expression", "Italian"], "grade": 999},
-  {"term": ["con grazia"], "definition": "with grace", "tags": ["Style/Expression", "Italian"], "grade": 999},
-  {"term": ["con moto"], "definition": "with movement", "tags": ["Tempo", "Style/Expression", "Italian"], "grade": 2},
-  {"term": ["con pedale", "con ped."], "definition": "with the right pedal", "tags": ["Technique/Instruction", "Italian"], "grade": 5},
-  {"term": ["con sordino"], "definition": "with mute", "tags": ["Technique/Instruction", "Italian"], "grade": 999},
-  {"term": ["crescendo", "cresc."], "definition": "becoming louder", "tags": ["Dynamics", "Italian"], "grade": 1},
-  {"term": ["forte", "f"], "definition": "loud", "tags": ["Dynamics", "Italian"], "grade": 1},
-  {"term": ["da capo", "D.C."], "definition": "from the beginning", "tags": ["Form/Direction", "Italian"], "grade": 1},
-  {"term": ["da capo al Fine"], "definition": "repeat from beginning to Fine", "tags": ["Form/Direction", "Italian"], "grade": 999},
-  {"term": ["dal segno", "D.S."], "definition": "from the sign", "tags": ["Form/Direction", "Italian"], "grade": 2},
-  {"term": ["decrescendo", "decresc."], "definition": "becoming softer", "tags": ["Dynamics", "Italian"], "grade": 1},
-  {"term": ["diminuendo", "dim."], "definition": "becoming softer", "tags": ["Dynamics", "Italian"], "grade": 1},
-  {"term": ["dolce"], "definition": "sweet", "tags": ["Style/Expression", "Italian"], "grade": 1},
-  {"term": ["dolente"], "definition": "sad", "tags": ["Style/Expression", "Italian"], "grade": 999},
-  {"term": ["espressivo", "espress."], "definition": "expressive", "tags": ["Style/Expression", "Italian"], "grade": 2},
-  {"term": ["fermata", "𝄐"], "definition": "pause; hold note", "tags": ["Articulation", "Form/Direction", "Italian"], "grade": 999},
-  {"term": ["fine"], "definition": "the end", "tags": ["Form/Direction", "Italian"], "grade": 1},
-  {"term": ["fortepiano", "fp"], "definition": "loud then suddenly soft", "tags": ["Dynamics", "Italian"], "grade": 2},
-  {"term": ["fortissimo", "ff"], "definition": "very loud", "tags": ["Dynamics", "Italian"], "grade": 1},
-  {"term": ["giocoso"], "definition": "playful, merry", "tags": ["Style/Expression", "Italian"], "grade": 3},
-  {"term": ["grandioso"], "definition": "grand, grandiose", "tags": ["Style/Expression", "Italian"], "grade": 999},
-  {"term": ["grave"], "definition": "slow and solemn", "tags": ["Tempo", "Style/Expression", "Italian"], "grade": 2},
-  {"term": ["grazioso"], "definition": "graceful", "tags": ["Style/Expression", "Italian"], "grade": 2},
-  {"term": ["langsam"], "definition": "slow", "tags": ["Tempo", "German"], "grade": 5},
-  {"term": ["largamente"], "definition": "broadly", "tags": ["Tempo", "Italian"], "grade": 5},
-  {"term": ["largo"], "definition": "slow, stately", "tags": ["Tempo", "Italian"], "grade": 2},
-  {"term": ["larghetto"], "definition": "rather slow", "tags": ["Tempo", "Italian"], "grade": 4},
-  {"term": ["legato"], "definition": "smooth", "tags": ["Articulation", "Italian"], "grade": 1},
-  {"term": ["léger"], "definition": "light, lightly", "tags": ["Style/Expression", "French"], "grade": 999},
-  {"term": ["leggiero"], "definition": "light", "tags": ["Style/Expression", "Italian"], "grade": 3},
-  {"term": ["lentement"], "definition": "slowly", "tags": ["Tempo", "French"], "grade": 999},
-  {"term": ["lento"], "definition": "slow", "tags": ["Tempo", "Italian"], "grade": 2},
-  {"term": ["l'istesso tempo"], "definition": "the same tempo", "tags": ["Tempo", "Italian"], "grade": 999},
-  {"term": ["maestoso"], "definition": "majestic", "tags": ["Style/Expression", "Italian"], "grade": 3},
-  {"term": ["mano destra", "M.D.", "m.d."], "definition": "with the right hand", "tags": ["Technique/Instruction", "Italian"], "grade": 5},
-  {"term": ["mano sinistra", "M.S.", "m.s."], "definition": "with the left hand", "tags": ["Technique/Instruction", "Italian"], "grade": 5},
-  {"term": ["marcato", "marc."], "definition": "emphatic, accented", "tags": ["Articulation", "Italian"], "grade": 3},
-  {"term": ["martellato"], "definition": "hammered", "tags": ["Articulation", "Italian"], "grade": 999},
-  {"term": ["mässig"], "definition": "at a moderate speed", "tags": ["Tempo", "German"], "grade": 5},
-  {"term": ["meno"], "definition": "less", "tags": ["Qualifier", "Italian"], "grade": 2},
-  {"term": ["meno mosso"], "definition": "less movement, slower", "tags": ["Tempo", "Italian"], "grade": 2},
-  {"term": ["mesto"], "definition": "sad", "tags": ["Style/Expression", "Italian"], "grade": 4},
-  {"term": ["mezzo forte", "mf"], "definition": "moderately loud", "tags": ["Dynamics", "Italian"], "grade": 1},
-  {"term": ["mezzo piano", "mp"], "definition": "moderately soft", "tags": ["Dynamics", "Italian"], "grade": 1},
-  {"term": ["mit"], "definition": "with", "tags": ["Qualifier", "German"], "grade": 999},
-  {"term": ["mit Ausdruck"], "definition": "with expression", "tags": ["Style/Expression", "German"], "grade": 999},
-  {"term": ["moderato"], "definition": "at a moderate tempo", "tags": ["Tempo", "Italian"], "grade": 1},
-  {"term": ["molto"], "definition": "much, very", "tags": ["Qualifier", "Italian"], "grade": 2},
-  {"term": ["morendo"], "definition": "dying away", "tags": ["Dynamics", "Italian"], "grade": 5},
-  {"term": ["mouvement"], "definition": "tempo, motion", "tags": ["Tempo", "French"], "grade": 999},
-  {"term": ["non troppo"], "definition": "not too much", "tags": ["Qualifier", "Italian"], "grade": 2},
-  {"term": ["ottava", "8va"], "definition": "an octave higher/lower", "tags": ["Technique/Instruction", "Italian"], "grade": 999},
-  {"term": ["pedale", "ped."], "definition": "with pedal", "tags": ["Technique/Instruction", "Italian"], "grade": 999},
-  {"term": ["pesante"], "definition": "heavy", "tags": ["Style/Expression", "Italian"], "grade": 3},
-  {"term": ["pianissimo", "pp"], "definition": "very soft", "tags": ["Dynamics", "Italian"], "grade": 1},
-  {"term": ["piano", "p"], "definition": "soft", "tags": ["Dynamics", "Italian"], "grade": 1},
-  {"term": ["piu"], "definition": "more", "tags": ["Qualifier", "Italian"], "grade": 2},
-  {"term": ["piu mosso"], "definition": "more movement, quicker", "tags": ["Tempo", "Italian"], "grade": 2},
-  {"term": ["pizzicato", "pizz."], "definition": "pluck with the fingers", "tags": ["Technique/Instruction", "Italian"], "grade": 4},
-  {"term": ["poco"], "definition": "little", "tags": ["Qualifier", "Italian"], "grade": 2},
-  {"term": ["poco a poco"], "definition": "little by little", "tags": ["Qualifier", "Italian"], "grade": 2},
-  {"term": ["prestissimo"], "definition": "very fast", "tags": ["Tempo", "Italian"], "grade": 3},
-  {"term": ["presto"], "definition": "very fast", "tags": ["Tempo", "Italian"], "grade": 2},
-  {"term": ["prima", "primo"], "definition": "first", "tags": ["Qualifier", "Italian"], "grade": 3},
-  {"term": ["prima volta", "seconda volta"], "definition": "first/second time", "tags": ["Form/Direction", "Italian"], "grade": 999},
-  {"term": ["quasi"], "definition": "as if, resembling", "tags": ["Qualifier", "Italian"], "grade": 5},
-  {"term": ["rallentando", "rall."], "definition": "slowing down", "tags": ["Tempo", "Italian"], "grade": 1},
-  {"term": ["repeat sign", ":,,"], "definition": "repeat the section", "tags": ["Form/Direction"], "grade": 999},
-  {"term": ["risoluto"], "definition": "bold, strong", "tags": ["Style/Expression", "Italian"], "grade": 3},
-  {"term": ["ritardando", "ritard.", "rit."], "definition": "slowing down gradually", "tags": ["Tempo", "Italian"], "grade": 1},
-  {"term": ["ritenuto", "riten.", "rit."], "definition": "suddenly slower", "tags": ["Tempo", "Italian"], "grade": 2},
-  {"term": ["rubato", "tempo rubato"], "definition": "with some freedom of time", "tags": ["Tempo", "Style/Expression", "Italian"], "grade": 4},
-  {"term": ["scherzando"], "definition": "playful, joking", "tags": ["Style/Expression", "Italian"], "grade": 3},
-  {"term": ["schnell"], "definition": "fast", "tags": ["Tempo", "German"], "grade": 5},
-  {"term": ["sehr"], "definition": "very", "tags": ["Qualifier", "German"], "grade": 999},
-  {"term": ["semplice"], "definition": "simple, plain", "tags": ["Style/Expression", "Italian"], "grade": 3},
-  {"term": ["sempre"], "definition": "always", "tags": ["Qualifier", "Italian"], "grade": 3},
-  {"term": ["sforzando", "sforzato", "sf", "sfz"], "definition": "forced, accented", "tags": ["Dynamics", "Articulation", "Italian"], "grade": 3},
-  {"term": ["simile"], "definition": "in the same way", "tags": ["Technique/Instruction", "Italian"], "grade": 3},
-  {"term": ["slur"], "definition": "play legato", "tags": ["Articulation"], "grade": 999},
-  {"term": ["sonore"], "definition": "sonorous", "tags": ["Style/Expression", "French"], "grade": 999},
-  {"term": ["sostenuto", "sost."], "definition": "sustained", "tags": ["Articulation", "Style/Expression", "Italian"], "grade": 3},
-  {"term": ["sotto voce"], "definition": "in an undertone (literally 'under the voice')", "tags": ["Dynamics", "Italian"], "grade": 5},
-  {"term": ["spiritoso"], "definition": "spirited", "tags": ["Style/Expression", "Italian"], "grade": 999},
-  {"term": ["staccato", "stacc."], "definition": "sharply detached", "tags": ["Articulation", "Italian"], "grade": 1},
-  {"term": ["stringendo"], "definition": "gradually getting faster", "tags": ["Tempo", "Italian"], "grade": 4},
-  {"term": ["subito", "sub."], "definition": "suddenly", "tags": ["Qualifier", "Italian"], "grade": 3},
-  {"term": ["tempo"], "definition": "speed", "tags": ["Tempo", "Italian"], "grade": 999},
-  {"term": ["Tempo primo"], "definition": "return to original tempo", "tags": ["Tempo", "Italian"], "grade": 999},
-  {"term": ["tenuto"], "definition": "held, sustained", "tags": ["Articulation", "Italian"], "grade": 999},
-  {"term": ["tranquillo"], "definition": "calm", "tags": ["Style/Expression", "Italian"], "grade": 3},
-  {"term": ["una corda"], "definition": "press the left pedal", "tags": ["Technique/Instruction", "Italian"], "grade": 5},
-  {"term": ["tre corde"], "definition": "release the left pedal", "tags": ["Technique/Instruction", "Italian"], "grade": 5},
-  {"term": ["triad", "chord"], "definition": "chord types", "tags": ["Theory/Harmony"], "grade": 999},
-  {"term": ["troppo"], "definition": "too much", "tags": ["Qualifier", "Italian"], "grade": 999},
-  {"term": ["vite"], "definition": "quick", "tags": ["Tempo", "French"], "grade": 4},
-  {"term": ["vivace", "vivo"], "definition": "lively, brisk", "tags": ["Tempo", "Style/Expression", "Italian"], "grade": 2},
-  {"term": ["largo"], "definition": "slow, stately", "tags": ["Tempo", "Italian"], "grade": 2},
-  {"term": ["alla marcia"], "definition": "in the style of a march", "tags": ["Style/Expression", "Italian"], "grade": 2},
-  {"term": ["e", "ed"], "definition": "and", "tags": ["Qualifier", "Italian"], "grade": 2},
-  {"term": ["ma"], "definition": "but", "tags": ["Qualifier", "Italian"], "grade": 2},
-  {"term": ["senza"], "definition": "without", "tags": ["Qualifier", "Italian"], "grade": 2},
-  {"term": ["con forza"], "definition": "with force", "tags": ["Style/Expression", "Italian"], "grade": 3},
-  {"term": ["energico"], "definition": "energetic", "tags": ["Style/Expression", "Italian"], "grade": 3},
-  {"term": ["triste", "tristamente"], "definition": "sad, sorrowful", "tags": ["Style/Expression", "Italian"], "grade": 3},
-  {"term": ["sul G"], "definition": "play on the G string (the lowest pitched of the four strings of a violin)", "tags": ["Technique/Instruction", "Italian"], "grade": 4},
-  {"term": ["sul D"], "definition": "play on the D string (the next string up from the G string on a violin)", "tags": ["Technique/Instruction", "Italian"], "grade": 4},
-  {"term": ["con sordini", "con sord.", "avec sourdines"], "definition": "with mutes", "tags": ["Technique/Instruction", "Italian", "French"], "grade": 4},
-  {"term": ["senza sordini", "senza sord.", "sans sourdines"], "definition": "without mutes", "tags": ["Technique/Instruction", "Italian", "French"], "grade": 4},
-  {"term": ["comodo", "tempo comodo"], "definition": "convenient/at a comfortable speed", "tags": ["Tempo", "Italian"], "grade": 4},
-  {"term": ["affettuoso"], "definition": "tenderly", "tags": ["Style/Expression", "Italian"], "grade": 4},
-  {"term": ["amabile"], "definition": "pleasant (like the word 'amiable')", "tags": ["Style/Expression", "Italian"], "grade": 4},
-  {"term": ["appassionato"], "definition": "with passion", "tags": ["Style/Expression", "Italian"], "grade": 4},
-  {"term": ["deciso"], "definition": "with determination", "tags": ["Style/Expression", "Italian"], "grade": 4},
-  {"term": ["misterioso"], "definition": "mysterious", "tags": ["Style/Expression", "Italian"], "grade": 4},
-  {"term": ["ritmico"], "definition": "rhythmically", "tags": ["Style/Expression", "Italian"], "grade": 4},
-  {"term": ["alla breve"], "definition": "with a minim beat", "tags": ["Tempo", "Italian"], "grade": 4},
-  {"term": ["come prima"], "definition": "as before", "tags": ["Qualifier", "Italian"], "grade": 4},
-  {"term": ["animé"], "definition": "animated, lively", "tags": ["Style/Expression", "French"], "grade": 4},
-  {"term": ["douce"], "definition": "sweet", "tags": ["Style/Expression", "French"], "grade": 4},
-  {"term": ["lent"], "definition": "slow", "tags": ["Tempo", "French"], "grade": 4},
-  {"term": ["modéré"], "definition": "at a moderate speed", "tags": ["Tempo", "French"], "grade": 4},
-  {"term": ["retenu"], "definition": "held back", "tags": ["Tempo", "French"], "grade": 4},
-  {"term": ["vite"], "definition": "quick", "tags": ["Tempo", "French"], "grade": 4},
-  {"term": ["a niente"], "definition": "to nothing", "tags": ["Dynamics", "Italian"], "grade": 5},
-  {"term": ["perdendosi"], "definition": "dying away", "tags": ["Dynamics", "Italian"], "grade": 5},
-  {"term": ["rinforzando", "rinf.", "rf", "rfz"], "definition": "reinforcing", "tags": ["Dynamics", "Italian"], "grade": 5},
-  {"term": ["smorzando", "smorz."], "definition": "dying away", "tags": ["Dynamics", "Italian"], "grade": 5},
-  {"term": ["cantando"], "definition": "singing", "tags": ["Style/Expression", "Italian"], "grade": 5},
-  {"term": ["con dolore"], "definition": "with grief", "tags": ["Style/Expression", "Italian"], "grade": 5},
-  {"term": ["con spirito"], "definition": "with spirit", "tags": ["Style/Expression", "Italian"], "grade": 5},
-  {"term": ["doloroso"], "definition": "sorrowful", "tags": ["Style/Expression", "Italian"], "grade": 5},
-  {"term": ["sonoro"], "definition": "resonant, with rich tone (like the word 'sonorous')", "tags": ["Style/Expression", "Italian"], "grade": 5},
-  {"term": ["lebhaft"], "definition": "lively", "tags": ["Style/Expression", "German"], "grade": 5},
-  {"term": ["ruhig"], "definition": "peaceful", "tags": ["Style/Expression", "German"], "grade": 5},
-  {"term": ["traurig"], "definition": "sad", "tags": ["Style/Expression", "German"], "grade": 5},
-  {"term": ["senza pedale"], "definition": "without the right pedal", "tags": ["Technique/Instruction", "Italian"], "grade": 5},
-  {"term": ["Ped.     *"], "definition": "press the right pedal (the sustain pedal) and release it at *", "tags": ["Technique/Instruction", "Italian"], "grade": 5},
-  {"term": ["Ped._____|"], "definition": "press the right pedal (the sustain pedal) and release it at the vertical line", "tags": ["Technique/Instruction", "Italian"], "grade": 5}
+  {
+    "term": [
+      "a tempo"
+    ],
+    "definition": "return to the original tempo",
+    "tags": [
+      "Tempo",
+      "Italian"
+    ],
+    "grade": 1,
+    "id": "1_0"
+  },
+  {
+    "term": [
+      "accelerando",
+      "accel."
+    ],
+    "definition": "becoming quicker",
+    "tags": [
+      "Tempo",
+      "Italian"
+    ],
+    "grade": 1,
+    "id": "1_1"
+  },
+  {
+    "term": [
+      "accent"
+    ],
+    "definition": "stressed note or chord",
+    "tags": [
+      "Articulation"
+    ],
+    "grade": 999,
+    "id": "999_0"
+  },
+  {
+    "term": [
+      "adagio"
+    ],
+    "definition": "a slow tempo",
+    "tags": [
+      "Tempo",
+      "Italian"
+    ],
+    "grade": 1,
+    "id": "1_2"
+  },
+  {
+    "term": [
+      "ad libitum",
+      "ad lib."
+    ],
+    "definition": "at choice",
+    "tags": [
+      "Style/Expression",
+      "Latin"
+    ],
+    "grade": 5,
+    "id": "5_0"
+  },
+  {
+    "term": [
+      "agitato"
+    ],
+    "definition": "agitated",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 3,
+    "id": "3_0"
+  },
+  {
+    "term": [
+      "allargando"
+    ],
+    "definition": "broadening, becoming slower",
+    "tags": [
+      "Tempo",
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 2,
+    "id": "2_0"
+  },
+  {
+    "term": [
+      "allegretto"
+    ],
+    "definition": "fairly fast (slower than allegro)",
+    "tags": [
+      "Tempo",
+      "Italian"
+    ],
+    "grade": 1,
+    "id": "1_3"
+  },
+  {
+    "term": [
+      "allegro"
+    ],
+    "definition": "fast",
+    "tags": [
+      "Tempo",
+      "Italian"
+    ],
+    "grade": 1,
+    "id": "1_4"
+  },
+  {
+    "term": [
+      "andante"
+    ],
+    "definition": "moderately slow; at a walking pace",
+    "tags": [
+      "Tempo",
+      "Italian"
+    ],
+    "grade": 1,
+    "id": "1_5"
+  },
+  {
+    "term": [
+      "andantino"
+    ],
+    "definition": "slightly faster than andante (but may also mean slightly slower)",
+    "tags": [
+      "Tempo",
+      "Italian"
+    ],
+    "grade": 3,
+    "id": "3_1"
+  },
+  {
+    "term": [
+      "animato"
+    ],
+    "definition": "animated, lively",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 3,
+    "id": "3_2"
+  },
+  {
+    "term": [
+      "arco"
+    ],
+    "definition": "play with the bow (only used if the player has previously been instructed to pluck)",
+    "tags": [
+      "Technique/Instruction",
+      "Italian"
+    ],
+    "grade": 4,
+    "id": "4_0"
+  },
+  {
+    "term": [
+      "assai"
+    ],
+    "definition": "very (allegro assai - very quick)",
+    "tags": [
+      "Qualifier",
+      "Italian"
+    ],
+    "grade": 4,
+    "id": "4_1"
+  },
+  {
+    "term": [
+      "attacca"
+    ],
+    "definition": "go straight on (to the next part of the music)",
+    "tags": [
+      "Technique/Instruction",
+      "Italian"
+    ],
+    "grade": 5,
+    "id": "5_1"
+  },
+  {
+    "term": [
+      "ben",
+      "bene"
+    ],
+    "definition": "well",
+    "tags": [
+      "Qualifier",
+      "Italian"
+    ],
+    "grade": 3,
+    "id": "3_3"
+  },
+  {
+    "term": [
+      "bewegt"
+    ],
+    "definition": "agitated, excited",
+    "tags": [
+      "Style/Expression",
+      "German"
+    ],
+    "grade": 999,
+    "id": "999_1"
+  },
+  {
+    "term": [
+      "brillante"
+    ],
+    "definition": "brilliant",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 999,
+    "id": "999_2"
+  },
+  {
+    "term": [
+      "calando"
+    ],
+    "definition": "becoming slower and softer",
+    "tags": [
+      "Tempo",
+      "Dynamics",
+      "Italian"
+    ],
+    "grade": 999,
+    "id": "999_3"
+  },
+  {
+    "term": [
+      "cantabile"
+    ],
+    "definition": "in a singing style",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 1,
+    "id": "1_6"
+  },
+  {
+    "term": [
+      "cedez"
+    ],
+    "definition": "yield; hold the tempo back",
+    "tags": [
+      "Tempo",
+      "French"
+    ],
+    "grade": 999,
+    "id": "999_4"
+  },
+  {
+    "term": [
+      "cluster"
+    ],
+    "definition": "chord of adjacent notes",
+    "tags": [
+      "Theory/Harmony"
+    ],
+    "grade": 999,
+    "id": "999_5"
+  },
+  {
+    "term": [
+      "col",
+      "coll'",
+      "colla",
+      "colle"
+    ],
+    "definition": "with",
+    "tags": [
+      "Qualifier",
+      "Italian"
+    ],
+    "grade": 2,
+    "id": "2_1"
+  },
+  {
+    "term": [
+      "con"
+    ],
+    "definition": "with",
+    "tags": [
+      "Qualifier",
+      "Italian"
+    ],
+    "grade": 2,
+    "id": "2_2"
+  },
+  {
+    "term": [
+      "con brio"
+    ],
+    "definition": "with vigour, lively",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 4,
+    "id": "4_2"
+  },
+  {
+    "term": [
+      "con espressione"
+    ],
+    "definition": "with expression",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 999,
+    "id": "999_6"
+  },
+  {
+    "term": [
+      "con fuoco"
+    ],
+    "definition": "with fire",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 999,
+    "id": "999_7"
+  },
+  {
+    "term": [
+      "con grazia"
+    ],
+    "definition": "with grace",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 999,
+    "id": "999_8"
+  },
+  {
+    "term": [
+      "con moto"
+    ],
+    "definition": "with movement",
+    "tags": [
+      "Tempo",
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 2,
+    "id": "2_3"
+  },
+  {
+    "term": [
+      "con pedale",
+      "con ped."
+    ],
+    "definition": "with the right pedal",
+    "tags": [
+      "Technique/Instruction",
+      "Italian"
+    ],
+    "grade": 5,
+    "id": "5_2"
+  },
+  {
+    "term": [
+      "con sordino"
+    ],
+    "definition": "with mute",
+    "tags": [
+      "Technique/Instruction",
+      "Italian"
+    ],
+    "grade": 999,
+    "id": "999_9"
+  },
+  {
+    "term": [
+      "crescendo",
+      "cresc."
+    ],
+    "definition": "becoming louder",
+    "tags": [
+      "Dynamics",
+      "Italian"
+    ],
+    "grade": 1,
+    "id": "1_7"
+  },
+  {
+    "term": [
+      "forte",
+      "f"
+    ],
+    "definition": "loud",
+    "tags": [
+      "Dynamics",
+      "Italian"
+    ],
+    "grade": 1,
+    "id": "1_8"
+  },
+  {
+    "term": [
+      "da capo",
+      "D.C."
+    ],
+    "definition": "from the beginning",
+    "tags": [
+      "Form/Direction",
+      "Italian"
+    ],
+    "grade": 1,
+    "id": "1_9"
+  },
+  {
+    "term": [
+      "da capo al Fine"
+    ],
+    "definition": "repeat from beginning to Fine",
+    "tags": [
+      "Form/Direction",
+      "Italian"
+    ],
+    "grade": 999,
+    "id": "999_10"
+  },
+  {
+    "term": [
+      "dal segno",
+      "D.S."
+    ],
+    "definition": "from the sign",
+    "tags": [
+      "Form/Direction",
+      "Italian"
+    ],
+    "grade": 2,
+    "id": "2_4"
+  },
+  {
+    "term": [
+      "decrescendo",
+      "decresc."
+    ],
+    "definition": "becoming softer",
+    "tags": [
+      "Dynamics",
+      "Italian"
+    ],
+    "grade": 1,
+    "id": "1_10"
+  },
+  {
+    "term": [
+      "diminuendo",
+      "dim."
+    ],
+    "definition": "becoming softer",
+    "tags": [
+      "Dynamics",
+      "Italian"
+    ],
+    "grade": 1,
+    "id": "1_11"
+  },
+  {
+    "term": [
+      "dolce"
+    ],
+    "definition": "sweet",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 1,
+    "id": "1_12"
+  },
+  {
+    "term": [
+      "dolente"
+    ],
+    "definition": "sad",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 999,
+    "id": "999_11"
+  },
+  {
+    "term": [
+      "espressivo",
+      "espress."
+    ],
+    "definition": "expressive",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 2,
+    "id": "2_5"
+  },
+  {
+    "term": [
+      "fermata",
+      "𝄐"
+    ],
+    "definition": "pause; hold note",
+    "tags": [
+      "Articulation",
+      "Form/Direction",
+      "Italian"
+    ],
+    "grade": 999,
+    "id": "999_12"
+  },
+  {
+    "term": [
+      "fine"
+    ],
+    "definition": "the end",
+    "tags": [
+      "Form/Direction",
+      "Italian"
+    ],
+    "grade": 1,
+    "id": "1_13"
+  },
+  {
+    "term": [
+      "fortepiano",
+      "fp"
+    ],
+    "definition": "loud then suddenly soft",
+    "tags": [
+      "Dynamics",
+      "Italian"
+    ],
+    "grade": 2,
+    "id": "2_6"
+  },
+  {
+    "term": [
+      "fortissimo",
+      "ff"
+    ],
+    "definition": "very loud",
+    "tags": [
+      "Dynamics",
+      "Italian"
+    ],
+    "grade": 1,
+    "id": "1_14"
+  },
+  {
+    "term": [
+      "giocoso"
+    ],
+    "definition": "playful, merry",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 3,
+    "id": "3_4"
+  },
+  {
+    "term": [
+      "grandioso"
+    ],
+    "definition": "grand, grandiose",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 999,
+    "id": "999_13"
+  },
+  {
+    "term": [
+      "grave"
+    ],
+    "definition": "slow and solemn",
+    "tags": [
+      "Tempo",
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 2,
+    "id": "2_7"
+  },
+  {
+    "term": [
+      "grazioso"
+    ],
+    "definition": "graceful",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 2,
+    "id": "2_8"
+  },
+  {
+    "term": [
+      "langsam"
+    ],
+    "definition": "slow",
+    "tags": [
+      "Tempo",
+      "German"
+    ],
+    "grade": 5,
+    "id": "5_3"
+  },
+  {
+    "term": [
+      "largamente"
+    ],
+    "definition": "broadly",
+    "tags": [
+      "Tempo",
+      "Italian"
+    ],
+    "grade": 5,
+    "id": "5_4"
+  },
+  {
+    "term": [
+      "largo"
+    ],
+    "definition": "slow, stately",
+    "tags": [
+      "Tempo",
+      "Italian"
+    ],
+    "grade": 2,
+    "id": "2_9"
+  },
+  {
+    "term": [
+      "larghetto"
+    ],
+    "definition": "rather slow",
+    "tags": [
+      "Tempo",
+      "Italian"
+    ],
+    "grade": 4,
+    "id": "4_3"
+  },
+  {
+    "term": [
+      "legato"
+    ],
+    "definition": "smooth",
+    "tags": [
+      "Articulation",
+      "Italian"
+    ],
+    "grade": 1,
+    "id": "1_15"
+  },
+  {
+    "term": [
+      "léger"
+    ],
+    "definition": "light, lightly",
+    "tags": [
+      "Style/Expression",
+      "French"
+    ],
+    "grade": 999,
+    "id": "999_14"
+  },
+  {
+    "term": [
+      "leggiero"
+    ],
+    "definition": "light",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 3,
+    "id": "3_5"
+  },
+  {
+    "term": [
+      "lentement"
+    ],
+    "definition": "slowly",
+    "tags": [
+      "Tempo",
+      "French"
+    ],
+    "grade": 999,
+    "id": "999_15"
+  },
+  {
+    "term": [
+      "lento"
+    ],
+    "definition": "slow",
+    "tags": [
+      "Tempo",
+      "Italian"
+    ],
+    "grade": 2,
+    "id": "2_10"
+  },
+  {
+    "term": [
+      "l'istesso tempo"
+    ],
+    "definition": "the same tempo",
+    "tags": [
+      "Tempo",
+      "Italian"
+    ],
+    "grade": 999,
+    "id": "999_16"
+  },
+  {
+    "term": [
+      "maestoso"
+    ],
+    "definition": "majestic",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 3,
+    "id": "3_6"
+  },
+  {
+    "term": [
+      "mano destra",
+      "M.D.",
+      "m.d."
+    ],
+    "definition": "with the right hand",
+    "tags": [
+      "Technique/Instruction",
+      "Italian"
+    ],
+    "grade": 5,
+    "id": "5_5"
+  },
+  {
+    "term": [
+      "mano sinistra",
+      "M.S.",
+      "m.s."
+    ],
+    "definition": "with the left hand",
+    "tags": [
+      "Technique/Instruction",
+      "Italian"
+    ],
+    "grade": 5,
+    "id": "5_6"
+  },
+  {
+    "term": [
+      "marcato",
+      "marc."
+    ],
+    "definition": "emphatic, accented",
+    "tags": [
+      "Articulation",
+      "Italian"
+    ],
+    "grade": 3,
+    "id": "3_7"
+  },
+  {
+    "term": [
+      "martellato"
+    ],
+    "definition": "hammered",
+    "tags": [
+      "Articulation",
+      "Italian"
+    ],
+    "grade": 999,
+    "id": "999_17"
+  },
+  {
+    "term": [
+      "mässig"
+    ],
+    "definition": "at a moderate speed",
+    "tags": [
+      "Tempo",
+      "German"
+    ],
+    "grade": 5,
+    "id": "5_7"
+  },
+  {
+    "term": [
+      "meno"
+    ],
+    "definition": "less",
+    "tags": [
+      "Qualifier",
+      "Italian"
+    ],
+    "grade": 2,
+    "id": "2_11"
+  },
+  {
+    "term": [
+      "meno mosso"
+    ],
+    "definition": "less movement, slower",
+    "tags": [
+      "Tempo",
+      "Italian"
+    ],
+    "grade": 2,
+    "id": "2_12"
+  },
+  {
+    "term": [
+      "mesto"
+    ],
+    "definition": "sad",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 4,
+    "id": "4_4"
+  },
+  {
+    "term": [
+      "mezzo forte",
+      "mf"
+    ],
+    "definition": "moderately loud",
+    "tags": [
+      "Dynamics",
+      "Italian"
+    ],
+    "grade": 1,
+    "id": "1_16"
+  },
+  {
+    "term": [
+      "mezzo piano",
+      "mp"
+    ],
+    "definition": "moderately soft",
+    "tags": [
+      "Dynamics",
+      "Italian"
+    ],
+    "grade": 1,
+    "id": "1_17"
+  },
+  {
+    "term": [
+      "mit"
+    ],
+    "definition": "with",
+    "tags": [
+      "Qualifier",
+      "German"
+    ],
+    "grade": 999,
+    "id": "999_18"
+  },
+  {
+    "term": [
+      "mit Ausdruck"
+    ],
+    "definition": "with expression",
+    "tags": [
+      "Style/Expression",
+      "German"
+    ],
+    "grade": 999,
+    "id": "999_19"
+  },
+  {
+    "term": [
+      "moderato"
+    ],
+    "definition": "at a moderate tempo",
+    "tags": [
+      "Tempo",
+      "Italian"
+    ],
+    "grade": 1,
+    "id": "1_18"
+  },
+  {
+    "term": [
+      "molto"
+    ],
+    "definition": "much, very",
+    "tags": [
+      "Qualifier",
+      "Italian"
+    ],
+    "grade": 2,
+    "id": "2_13"
+  },
+  {
+    "term": [
+      "morendo"
+    ],
+    "definition": "dying away",
+    "tags": [
+      "Dynamics",
+      "Italian"
+    ],
+    "grade": 5,
+    "id": "5_8"
+  },
+  {
+    "term": [
+      "mouvement"
+    ],
+    "definition": "tempo, motion",
+    "tags": [
+      "Tempo",
+      "French"
+    ],
+    "grade": 999,
+    "id": "999_20"
+  },
+  {
+    "term": [
+      "non troppo"
+    ],
+    "definition": "not too much",
+    "tags": [
+      "Qualifier",
+      "Italian"
+    ],
+    "grade": 2,
+    "id": "2_14"
+  },
+  {
+    "term": [
+      "ottava",
+      "8va"
+    ],
+    "definition": "an octave higher/lower",
+    "tags": [
+      "Technique/Instruction",
+      "Italian"
+    ],
+    "grade": 999,
+    "id": "999_21"
+  },
+  {
+    "term": [
+      "pedale",
+      "ped."
+    ],
+    "definition": "with pedal",
+    "tags": [
+      "Technique/Instruction",
+      "Italian"
+    ],
+    "grade": 999,
+    "id": "999_22"
+  },
+  {
+    "term": [
+      "pesante"
+    ],
+    "definition": "heavy",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 3,
+    "id": "3_8"
+  },
+  {
+    "term": [
+      "pianissimo",
+      "pp"
+    ],
+    "definition": "very soft",
+    "tags": [
+      "Dynamics",
+      "Italian"
+    ],
+    "grade": 1,
+    "id": "1_19"
+  },
+  {
+    "term": [
+      "piano",
+      "p"
+    ],
+    "definition": "soft",
+    "tags": [
+      "Dynamics",
+      "Italian"
+    ],
+    "grade": 1,
+    "id": "1_20"
+  },
+  {
+    "term": [
+      "piu"
+    ],
+    "definition": "more",
+    "tags": [
+      "Qualifier",
+      "Italian"
+    ],
+    "grade": 2,
+    "id": "2_15"
+  },
+  {
+    "term": [
+      "piu mosso"
+    ],
+    "definition": "more movement, quicker",
+    "tags": [
+      "Tempo",
+      "Italian"
+    ],
+    "grade": 2,
+    "id": "2_16"
+  },
+  {
+    "term": [
+      "pizzicato",
+      "pizz."
+    ],
+    "definition": "pluck with the fingers",
+    "tags": [
+      "Technique/Instruction",
+      "Italian"
+    ],
+    "grade": 4,
+    "id": "4_5"
+  },
+  {
+    "term": [
+      "poco"
+    ],
+    "definition": "little",
+    "tags": [
+      "Qualifier",
+      "Italian"
+    ],
+    "grade": 2,
+    "id": "2_17"
+  },
+  {
+    "term": [
+      "poco a poco"
+    ],
+    "definition": "little by little",
+    "tags": [
+      "Qualifier",
+      "Italian"
+    ],
+    "grade": 2,
+    "id": "2_18"
+  },
+  {
+    "term": [
+      "prestissimo"
+    ],
+    "definition": "very fast",
+    "tags": [
+      "Tempo",
+      "Italian"
+    ],
+    "grade": 3,
+    "id": "3_9"
+  },
+  {
+    "term": [
+      "presto"
+    ],
+    "definition": "very fast",
+    "tags": [
+      "Tempo",
+      "Italian"
+    ],
+    "grade": 2,
+    "id": "2_19"
+  },
+  {
+    "term": [
+      "prima",
+      "primo"
+    ],
+    "definition": "first",
+    "tags": [
+      "Qualifier",
+      "Italian"
+    ],
+    "grade": 3,
+    "id": "3_10"
+  },
+  {
+    "term": [
+      "prima volta",
+      "seconda volta"
+    ],
+    "definition": "first/second time",
+    "tags": [
+      "Form/Direction",
+      "Italian"
+    ],
+    "grade": 999,
+    "id": "999_23"
+  },
+  {
+    "term": [
+      "quasi"
+    ],
+    "definition": "as if, resembling",
+    "tags": [
+      "Qualifier",
+      "Italian"
+    ],
+    "grade": 5,
+    "id": "5_9"
+  },
+  {
+    "term": [
+      "rallentando",
+      "rall."
+    ],
+    "definition": "slowing down",
+    "tags": [
+      "Tempo",
+      "Italian"
+    ],
+    "grade": 1,
+    "id": "1_21"
+  },
+  {
+    "term": [
+      "repeat sign",
+      ":,,"
+    ],
+    "definition": "repeat the section",
+    "tags": [
+      "Form/Direction"
+    ],
+    "grade": 999,
+    "id": "999_24"
+  },
+  {
+    "term": [
+      "risoluto"
+    ],
+    "definition": "bold, strong",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 3,
+    "id": "3_11"
+  },
+  {
+    "term": [
+      "ritardando",
+      "ritard.",
+      "rit."
+    ],
+    "definition": "slowing down gradually",
+    "tags": [
+      "Tempo",
+      "Italian"
+    ],
+    "grade": 1,
+    "id": "1_22"
+  },
+  {
+    "term": [
+      "ritenuto",
+      "riten.",
+      "rit."
+    ],
+    "definition": "suddenly slower",
+    "tags": [
+      "Tempo",
+      "Italian"
+    ],
+    "grade": 2,
+    "id": "2_20"
+  },
+  {
+    "term": [
+      "rubato",
+      "tempo rubato"
+    ],
+    "definition": "with some freedom of time",
+    "tags": [
+      "Tempo",
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 4,
+    "id": "4_6"
+  },
+  {
+    "term": [
+      "scherzando"
+    ],
+    "definition": "playful, joking",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 3,
+    "id": "3_12"
+  },
+  {
+    "term": [
+      "schnell"
+    ],
+    "definition": "fast",
+    "tags": [
+      "Tempo",
+      "German"
+    ],
+    "grade": 5,
+    "id": "5_10"
+  },
+  {
+    "term": [
+      "sehr"
+    ],
+    "definition": "very",
+    "tags": [
+      "Qualifier",
+      "German"
+    ],
+    "grade": 999,
+    "id": "999_25"
+  },
+  {
+    "term": [
+      "semplice"
+    ],
+    "definition": "simple, plain",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 3,
+    "id": "3_13"
+  },
+  {
+    "term": [
+      "sempre"
+    ],
+    "definition": "always",
+    "tags": [
+      "Qualifier",
+      "Italian"
+    ],
+    "grade": 3,
+    "id": "3_14"
+  },
+  {
+    "term": [
+      "sforzando",
+      "sforzato",
+      "sf",
+      "sfz"
+    ],
+    "definition": "forced, accented",
+    "tags": [
+      "Dynamics",
+      "Articulation",
+      "Italian"
+    ],
+    "grade": 3,
+    "id": "3_15"
+  },
+  {
+    "term": [
+      "simile"
+    ],
+    "definition": "in the same way",
+    "tags": [
+      "Technique/Instruction",
+      "Italian"
+    ],
+    "grade": 3,
+    "id": "3_16"
+  },
+  {
+    "term": [
+      "slur"
+    ],
+    "definition": "play legato",
+    "tags": [
+      "Articulation"
+    ],
+    "grade": 999,
+    "id": "999_26"
+  },
+  {
+    "term": [
+      "sonore"
+    ],
+    "definition": "sonorous",
+    "tags": [
+      "Style/Expression",
+      "French"
+    ],
+    "grade": 999,
+    "id": "999_27"
+  },
+  {
+    "term": [
+      "sostenuto",
+      "sost."
+    ],
+    "definition": "sustained",
+    "tags": [
+      "Articulation",
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 3,
+    "id": "3_17"
+  },
+  {
+    "term": [
+      "sotto voce"
+    ],
+    "definition": "in an undertone (literally 'under the voice')",
+    "tags": [
+      "Dynamics",
+      "Italian"
+    ],
+    "grade": 5,
+    "id": "5_11"
+  },
+  {
+    "term": [
+      "spiritoso"
+    ],
+    "definition": "spirited",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 999,
+    "id": "999_28"
+  },
+  {
+    "term": [
+      "staccato",
+      "stacc."
+    ],
+    "definition": "sharply detached",
+    "tags": [
+      "Articulation",
+      "Italian"
+    ],
+    "grade": 1,
+    "id": "1_23"
+  },
+  {
+    "term": [
+      "stringendo"
+    ],
+    "definition": "gradually getting faster",
+    "tags": [
+      "Tempo",
+      "Italian"
+    ],
+    "grade": 4,
+    "id": "4_7"
+  },
+  {
+    "term": [
+      "subito",
+      "sub."
+    ],
+    "definition": "suddenly",
+    "tags": [
+      "Qualifier",
+      "Italian"
+    ],
+    "grade": 3,
+    "id": "3_18"
+  },
+  {
+    "term": [
+      "tempo"
+    ],
+    "definition": "speed",
+    "tags": [
+      "Tempo",
+      "Italian"
+    ],
+    "grade": 999,
+    "id": "999_29"
+  },
+  {
+    "term": [
+      "Tempo primo"
+    ],
+    "definition": "return to original tempo",
+    "tags": [
+      "Tempo",
+      "Italian"
+    ],
+    "grade": 999,
+    "id": "999_30"
+  },
+  {
+    "term": [
+      "tenuto"
+    ],
+    "definition": "held, sustained",
+    "tags": [
+      "Articulation",
+      "Italian"
+    ],
+    "grade": 999,
+    "id": "999_31"
+  },
+  {
+    "term": [
+      "tranquillo"
+    ],
+    "definition": "calm",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 3,
+    "id": "3_19"
+  },
+  {
+    "term": [
+      "una corda"
+    ],
+    "definition": "press the left pedal",
+    "tags": [
+      "Technique/Instruction",
+      "Italian"
+    ],
+    "grade": 5,
+    "id": "5_12"
+  },
+  {
+    "term": [
+      "tre corde"
+    ],
+    "definition": "release the left pedal",
+    "tags": [
+      "Technique/Instruction",
+      "Italian"
+    ],
+    "grade": 5,
+    "id": "5_13"
+  },
+  {
+    "term": [
+      "triad",
+      "chord"
+    ],
+    "definition": "chord types",
+    "tags": [
+      "Theory/Harmony"
+    ],
+    "grade": 999,
+    "id": "999_32"
+  },
+  {
+    "term": [
+      "troppo"
+    ],
+    "definition": "too much",
+    "tags": [
+      "Qualifier",
+      "Italian"
+    ],
+    "grade": 999,
+    "id": "999_33"
+  },
+  {
+    "term": [
+      "vite"
+    ],
+    "definition": "quick",
+    "tags": [
+      "Tempo",
+      "French"
+    ],
+    "grade": 4,
+    "id": "4_8"
+  },
+  {
+    "term": [
+      "vivace",
+      "vivo"
+    ],
+    "definition": "lively, brisk",
+    "tags": [
+      "Tempo",
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 2,
+    "id": "2_21"
+  },
+  {
+    "term": [
+      "largo"
+    ],
+    "definition": "slow, stately",
+    "tags": [
+      "Tempo",
+      "Italian"
+    ],
+    "grade": 2,
+    "id": "2_22"
+  },
+  {
+    "term": [
+      "alla marcia"
+    ],
+    "definition": "in the style of a march",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 2,
+    "id": "2_23"
+  },
+  {
+    "term": [
+      "e",
+      "ed"
+    ],
+    "definition": "and",
+    "tags": [
+      "Qualifier",
+      "Italian"
+    ],
+    "grade": 2,
+    "id": "2_24"
+  },
+  {
+    "term": [
+      "ma"
+    ],
+    "definition": "but",
+    "tags": [
+      "Qualifier",
+      "Italian"
+    ],
+    "grade": 2,
+    "id": "2_25"
+  },
+  {
+    "term": [
+      "senza"
+    ],
+    "definition": "without",
+    "tags": [
+      "Qualifier",
+      "Italian"
+    ],
+    "grade": 2,
+    "id": "2_26"
+  },
+  {
+    "term": [
+      "con forza"
+    ],
+    "definition": "with force",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 3,
+    "id": "3_20"
+  },
+  {
+    "term": [
+      "energico"
+    ],
+    "definition": "energetic",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 3,
+    "id": "3_21"
+  },
+  {
+    "term": [
+      "triste",
+      "tristamente"
+    ],
+    "definition": "sad, sorrowful",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 3,
+    "id": "3_22"
+  },
+  {
+    "term": [
+      "sul G"
+    ],
+    "definition": "play on the G string (the lowest pitched of the four strings of a violin)",
+    "tags": [
+      "Technique/Instruction",
+      "Italian"
+    ],
+    "grade": 4,
+    "id": "4_9"
+  },
+  {
+    "term": [
+      "sul D"
+    ],
+    "definition": "play on the D string (the next string up from the G string on a violin)",
+    "tags": [
+      "Technique/Instruction",
+      "Italian"
+    ],
+    "grade": 4,
+    "id": "4_10"
+  },
+  {
+    "term": [
+      "con sordini",
+      "con sord.",
+      "avec sourdines"
+    ],
+    "definition": "with mutes",
+    "tags": [
+      "Technique/Instruction",
+      "Italian",
+      "French"
+    ],
+    "grade": 4,
+    "id": "4_11"
+  },
+  {
+    "term": [
+      "senza sordini",
+      "senza sord.",
+      "sans sourdines"
+    ],
+    "definition": "without mutes",
+    "tags": [
+      "Technique/Instruction",
+      "Italian",
+      "French"
+    ],
+    "grade": 4,
+    "id": "4_12"
+  },
+  {
+    "term": [
+      "comodo",
+      "tempo comodo"
+    ],
+    "definition": "convenient/at a comfortable speed",
+    "tags": [
+      "Tempo",
+      "Italian"
+    ],
+    "grade": 4,
+    "id": "4_13"
+  },
+  {
+    "term": [
+      "affettuoso"
+    ],
+    "definition": "tenderly",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 4,
+    "id": "4_14"
+  },
+  {
+    "term": [
+      "amabile"
+    ],
+    "definition": "pleasant (like the word 'amiable')",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 4,
+    "id": "4_15"
+  },
+  {
+    "term": [
+      "appassionato"
+    ],
+    "definition": "with passion",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 4,
+    "id": "4_16"
+  },
+  {
+    "term": [
+      "deciso"
+    ],
+    "definition": "with determination",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 4,
+    "id": "4_17"
+  },
+  {
+    "term": [
+      "misterioso"
+    ],
+    "definition": "mysterious",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 4,
+    "id": "4_18"
+  },
+  {
+    "term": [
+      "ritmico"
+    ],
+    "definition": "rhythmically",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 4,
+    "id": "4_19"
+  },
+  {
+    "term": [
+      "alla breve"
+    ],
+    "definition": "with a minim beat",
+    "tags": [
+      "Tempo",
+      "Italian"
+    ],
+    "grade": 4,
+    "id": "4_20"
+  },
+  {
+    "term": [
+      "come prima"
+    ],
+    "definition": "as before",
+    "tags": [
+      "Qualifier",
+      "Italian"
+    ],
+    "grade": 4,
+    "id": "4_21"
+  },
+  {
+    "term": [
+      "animé"
+    ],
+    "definition": "animated, lively",
+    "tags": [
+      "Style/Expression",
+      "French"
+    ],
+    "grade": 4,
+    "id": "4_22"
+  },
+  {
+    "term": [
+      "douce"
+    ],
+    "definition": "sweet",
+    "tags": [
+      "Style/Expression",
+      "French"
+    ],
+    "grade": 4,
+    "id": "4_23"
+  },
+  {
+    "term": [
+      "lent"
+    ],
+    "definition": "slow",
+    "tags": [
+      "Tempo",
+      "French"
+    ],
+    "grade": 4,
+    "id": "4_24"
+  },
+  {
+    "term": [
+      "modéré"
+    ],
+    "definition": "at a moderate speed",
+    "tags": [
+      "Tempo",
+      "French"
+    ],
+    "grade": 4,
+    "id": "4_25"
+  },
+  {
+    "term": [
+      "retenu"
+    ],
+    "definition": "held back",
+    "tags": [
+      "Tempo",
+      "French"
+    ],
+    "grade": 4,
+    "id": "4_26"
+  },
+  {
+    "term": [
+      "vite"
+    ],
+    "definition": "quick",
+    "tags": [
+      "Tempo",
+      "French"
+    ],
+    "grade": 4,
+    "id": "4_27"
+  },
+  {
+    "term": [
+      "a niente"
+    ],
+    "definition": "to nothing",
+    "tags": [
+      "Dynamics",
+      "Italian"
+    ],
+    "grade": 5,
+    "id": "5_14"
+  },
+  {
+    "term": [
+      "perdendosi"
+    ],
+    "definition": "dying away",
+    "tags": [
+      "Dynamics",
+      "Italian"
+    ],
+    "grade": 5,
+    "id": "5_15"
+  },
+  {
+    "term": [
+      "rinforzando",
+      "rinf.",
+      "rf",
+      "rfz"
+    ],
+    "definition": "reinforcing",
+    "tags": [
+      "Dynamics",
+      "Italian"
+    ],
+    "grade": 5,
+    "id": "5_16"
+  },
+  {
+    "term": [
+      "smorzando",
+      "smorz."
+    ],
+    "definition": "dying away",
+    "tags": [
+      "Dynamics",
+      "Italian"
+    ],
+    "grade": 5,
+    "id": "5_17"
+  },
+  {
+    "term": [
+      "cantando"
+    ],
+    "definition": "singing",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 5,
+    "id": "5_18"
+  },
+  {
+    "term": [
+      "con dolore"
+    ],
+    "definition": "with grief",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 5,
+    "id": "5_19"
+  },
+  {
+    "term": [
+      "con spirito"
+    ],
+    "definition": "with spirit",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 5,
+    "id": "5_20"
+  },
+  {
+    "term": [
+      "doloroso"
+    ],
+    "definition": "sorrowful",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 5,
+    "id": "5_21"
+  },
+  {
+    "term": [
+      "sonoro"
+    ],
+    "definition": "resonant, with rich tone (like the word 'sonorous')",
+    "tags": [
+      "Style/Expression",
+      "Italian"
+    ],
+    "grade": 5,
+    "id": "5_22"
+  },
+  {
+    "term": [
+      "lebhaft"
+    ],
+    "definition": "lively",
+    "tags": [
+      "Style/Expression",
+      "German"
+    ],
+    "grade": 5,
+    "id": "5_23"
+  },
+  {
+    "term": [
+      "ruhig"
+    ],
+    "definition": "peaceful",
+    "tags": [
+      "Style/Expression",
+      "German"
+    ],
+    "grade": 5,
+    "id": "5_24"
+  },
+  {
+    "term": [
+      "traurig"
+    ],
+    "definition": "sad",
+    "tags": [
+      "Style/Expression",
+      "German"
+    ],
+    "grade": 5,
+    "id": "5_25"
+  },
+  {
+    "term": [
+      "senza pedale"
+    ],
+    "definition": "without the right pedal",
+    "tags": [
+      "Technique/Instruction",
+      "Italian"
+    ],
+    "grade": 5,
+    "id": "5_26"
+  },
+  {
+    "term": [
+      "Ped.     *"
+    ],
+    "definition": "press the right pedal (the sustain pedal) and release it at *",
+    "tags": [
+      "Technique/Instruction",
+      "Italian"
+    ],
+    "grade": 5,
+    "id": "5_27"
+  },
+  {
+    "term": [
+      "Ped._____|"
+    ],
+    "definition": "press the right pedal (the sustain pedal) and release it at the vertical line",
+    "tags": [
+      "Technique/Instruction",
+      "Italian"
+    ],
+    "grade": 5,
+    "id": "5_28"
+  }
 ]

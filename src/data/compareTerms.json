@@ -1,12 +1,46 @@
 {
   "opposite": [
-    { "termAlias": "piano", "oppositeAlias": "forte" },
-    { "termAlias": "pianissimo", "oppositeAlias": "fortissimo" },
-    { "termAlias": "crescendo", "oppositeAlias": "decrescendo" },
-    { "termAlias": "accelerando", "oppositeAlias": "rallentando" },
-    { "termAlias": "legato", "oppositeAlias": "staccato" },
-    { "termAlias": "lento", "oppositeAlias": "presto" },
-    { "termAlias": "adagio", "oppositeAlias": "allegro" }
+    {
+      "termId": "1_20",
+      "termDescription": "soft",
+      "oppositeId": "1_8",
+      "oppositeDescription": "loud"
+    },
+    {
+      "termId": "1_19",
+      "termDescription": "very soft",
+      "oppositeId": "1_14",
+      "oppositeDescription": "very loud"
+    },
+    {
+      "termId": "1_7",
+      "termDescription": "becoming louder",
+      "oppositeId": "1_10",
+      "oppositeDescription": "becoming softer"
+    },
+    {
+      "termId": "1_1",
+      "termDescription": "becoming quicker",
+      "oppositeId": "1_21",
+      "oppositeDescription": "slowing down"
+    },
+    {
+      "termId": "1_15",
+      "termDescription": "smooth",
+      "oppositeId": "1_23",
+      "oppositeDescription": "sharply detached"
+    },
+    {
+      "termId": "2_10",
+      "termDescription": "slow",
+      "oppositeId": "2_19",
+      "oppositeDescription": "very fast"
+    },
+    {
+      "termId": "1_2",
+      "termDescription": "a slow tempo",
+      "oppositeId": "1_4",
+      "oppositeDescription": "fast"
+    }
   ]
 }
-

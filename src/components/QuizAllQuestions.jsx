@@ -41,15 +41,15 @@ function QuizAllQuestions({ questions, answers, onAnswerChange, onSubmit, select
     if (orderingStates[questionIndex]) {
       return orderingStates[questionIndex]
     }
-    // Initialize with current answer or random order
+    // Initialize with current answer or use the order from termIds (already initialized based on order values)
     if (currentAnswer && currentAnswer.trim()) {
       const order = currentAnswer.split(',').map(id => id.trim()).filter(id => id)
       if (order.length === termIds.length) {
         return order
       }
     }
-    // Return shuffled termIds
-    return [...termIds].sort(() => Math.random() - 0.5)
+    // Return termIds as-is (already in order based on order values from data)
+    return [...termIds]
   }
   
   const updateOrderingState = (questionIndex, newOrder) => {
@@ -70,15 +70,15 @@ function QuizAllQuestions({ questions, answers, onAnswerChange, onSubmit, select
           const termIds = question.termIds || []
           const currentAnswer = answers[index]
           
-          // Initialize with current answer or random order
+          // Initialize with current answer or use the order from termIds (already initialized based on order values)
           let order
           if (currentAnswer && currentAnswer.trim()) {
             order = currentAnswer.split(',').map(id => id.trim()).filter(id => id)
             if (order.length !== termIds.length) {
-              order = [...termIds].sort(() => Math.random() - 0.5)
+              order = [...termIds]
             }
           } else {
-            order = [...termIds].sort(() => Math.random() - 0.5)
+            order = [...termIds]
           }
           
           newStates[index] = order
@@ -99,13 +99,13 @@ function QuizAllQuestions({ questions, answers, onAnswerChange, onSubmit, select
         const currentAnswer = answers[index]
         const termIds = question.termIds || []
         
-        // If no answer exists, initialize with the current ordering state or create a random order
+        // If no answer exists, initialize with the current ordering state or use termIds order
         if (!currentAnswer || !currentAnswer.trim()) {
           let order = orderingStates[index]
           
-          // If ordering state doesn't exist yet or is invalid, create a random order
+          // If ordering state doesn't exist yet or is invalid, use termIds order (already initialized based on order values)
           if (!order || order.length !== termIds.length) {
-            order = [...termIds].sort(() => Math.random() - 0.5)
+            order = [...termIds]
             // Only update if this state doesn't exist (to avoid infinite loops)
             if (!orderingStates[index]) {
               updates.push({ index, order })

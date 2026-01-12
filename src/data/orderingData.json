@@ -1,59 +1,157 @@
 {
   "tempo": {
     "order": {
-      "grave": 1,
-      "lento": 2,
-      "lentement": 2,
-      "langsam": 2,
-      "adagio": 3,
-      "larghetto": 4,
-      "largamente": 4,
-      "andante": 5,
-      "andantino": 6,
-      "moderato": 6,
-      "modéré": 6,
-      "mässig": 6,
-      "allegretto": 7,
-      "allegro": 8,
-      "vivace": 8,
-      "vivo": 8,
-      "animato": 8,
-      "presto": 9,
-      "prestissimo": 10,
-      "schnell": 9,
-      "vite": 9
+      "2_7": {
+        "order": 1,
+        "description": "slow and solemn"
+      },
+      "2_10": {
+        "order": 2,
+        "description": "slow"
+      },
+      "999_15": {
+        "order": 2,
+        "description": "slowly"
+      },
+      "5_3": {
+        "order": 2,
+        "description": "slow"
+      },
+      "1_2": {
+        "order": 3,
+        "description": "a slow tempo"
+      },
+      "4_3": {
+        "order": 4,
+        "description": "rather slow"
+      },
+      "5_4": {
+        "order": 4,
+        "description": "broadly"
+      },
+      "1_5": {
+        "order": 5,
+        "description": "moderately slow; at a walking pace"
+      },
+      "3_1": {
+        "order": 6,
+        "description": "slightly faster than andante (but may also mean slightly slower)"
+      },
+      "1_18": {
+        "order": 6,
+        "description": "at a moderate tempo"
+      },
+      "4_25": {
+        "order": 6,
+        "description": "at a moderate speed"
+      },
+      "5_7": {
+        "order": 6,
+        "description": "at a moderate speed"
+      },
+      "1_3": {
+        "order": 7,
+        "description": "fairly fast (slower than allegro)"
+      },
+      "1_4": {
+        "order": 8,
+        "description": "fast"
+      },
+      "2_21": {
+        "order": 8,
+        "description": "lively, brisk"
+      },
+      "3_2": {
+        "order": 8,
+        "description": "animated, lively"
+      },
+      "2_19": {
+        "order": 9,
+        "description": "very fast"
+      },
+      "3_9": {
+        "order": 10,
+        "description": "very fast"
+      },
+      "5_10": {
+        "order": 9,
+        "description": "fast"
+      },
+      "4_27": {
+        "order": 9,
+        "description": "quick"
+      }
     }
   },
   "dynamics": {
     "rules": [
       {
-        "keywords": ["pianissimo", "pp"],
+        "ids": [
+          {
+            "id": "1_19",
+            "description": "very soft"
+          }
+        ],
+        "exclude": [],
         "order": 1
       },
       {
-        "keywords": ["piano"],
-        "exclude": ["mezzo", "forte"],
+        "ids": [
+          {
+            "id": "1_20",
+            "description": "soft"
+          }
+        ],
+        "exclude": [
+          "mezzo",
+          "forte"
+        ],
         "order": 2
       },
       {
-        "keywords": ["mezzo piano", "mp"],
+        "ids": [
+          {
+            "id": "1_17",
+            "description": "moderately soft"
+          }
+        ],
+        "exclude": [],
         "order": 3
       },
       {
-        "keywords": ["mezzo forte", "mf"],
+        "ids": [
+          {
+            "id": "1_16",
+            "description": "moderately loud"
+          }
+        ],
+        "exclude": [],
         "order": 4
       },
       {
-        "keywords": ["forte"],
-        "exclude": ["piano", "mezzo", "fortissimo"],
+        "ids": [
+          {
+            "id": "1_8",
+            "description": "loud"
+          }
+        ],
+        "exclude": [
+          "piano",
+          "mezzo",
+          "fortissimo"
+        ],
         "order": 5
       },
       {
-        "keywords": ["fortissimo", "ff"],
+        "ids": [
+          {
+            "id": "1_14",
+            "description": "very loud"
+          }
+        ],
+        "exclude": [],
         "order": 6
       }
-    ],
-    "defaultOrder": 999
+    ]
   }
 }
-
