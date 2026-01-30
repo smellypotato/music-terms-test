@@ -4,17 +4,35 @@ import Cheatsheet from './Cheatsheet'
 import OrderingQuestion from './OrderingQuestion'
 import MultipleChoiceQuestion from './MultipleChoiceQuestion'
 import ShortAnswerQuestion from './ShortAnswerQuestion'
-import musicTerms from '../data/musicTerms.json'
+import musicTermsData from '../data/musicTerms.json'
 import { getCanonicalTerm, hasAlias } from '../utils/termUtils'
+import type { MusicTerm } from '../types'
+import type { Question, MultipleChoiceQuestion as MCQuestion } from '../types'
 
-function QuizAllQuestions({ questions, answers, onAnswerChange, onSubmit, selectedTags = [], onBack }) {
+const musicTerms = musicTermsData as MusicTerm[]
+
+interface QuizAllQuestionsProps {
+  questions: Question[]
+  answers: (string | null)[]
+  onAnswerChange: (questionIndex: number, answer: string) => void
+  onSubmit: () => void
+  selectedTags?: string[]
+  onBack?: () => void
+}
+
+export default function QuizAllQuestions({
+  questions,
+  answers,
+  onAnswerChange,
+  onSubmit,
+  selectedTags = [],
+  onBack
+}: QuizAllQuestionsProps) {
   const [showCheatsheet, setShowCheatsheet] = useState(false)
-  
-  // Check for debug mode from query parameter
-  const isDebugMode = new URLSearchParams(window.location.search).get('debug') === 'true'
-  
-  // Helper function to get grade from a term (by canonical term or alias)
-  const getTermGrade = (termIdentifier) => {
+  const isDebugMode =
+    new URLSearchParams(window.location.search).get('debug') === 'true'
+
+  const getTermGrade = (termIdentifier: string): number | null => {
     if (!termIdentifier) return null
     const term = musicTerms.find(t => {
       const canonical = getCanonicalTerm(t)
@@ -24,77 +42,69 @@ function QuizAllQuestions({ questions, answers, onAnswerChange, onSubmit, select
     })
     return term?.grade ?? null
   }
-  
-  // Helper function to get grade from an option (could be term alias or definition)
-  const getOptionGrade = (option, question) => {
-    // For term-based options, try to find the term by alias
+
+  const getOptionGrade = (
+    option: string,
+    _question: MCQuestion
+  ): number | null => {
     const term = musicTerms.find(t => {
       const aliases = Array.isArray(t.term) ? t.term : [t.term]
       return aliases.includes(option)
     })
     return term?.grade ?? null
   }
-  
-  const handleAnswer = (questionIndex, answer) => {
+
+  const handleAnswer = (questionIndex: number, answer: string) => {
     onAnswerChange(questionIndex, answer)
   }
 
-  // Parse answer string to order array for ordering questions
-  const getOrderFromAnswer = (answer, termIds) => {
-    if (answer && answer.trim()) {
-      const parsed = answer.split(',').map(id => id.trim()).filter(id => id)
-      if (parsed.length === termIds.length) {
-        return parsed
-      }
+  const getOrderFromAnswer = (
+    answer: string | null,
+    termIds: string[]
+  ): string[] => {
+    if (answer?.trim()) {
+      const parsed = answer
+        .split(',')
+        .map(id => id.trim())
+        .filter(id => id)
+      if (parsed.length === termIds.length) return parsed
     }
-    // Return termIds as fallback (initial order from generation)
     return [...termIds]
   }
 
-  // Handle order change for ordering questions
-  const handleOrderChange = (questionIndex, newOrder) => {
+  const handleOrderChange = (questionIndex: number, newOrder: string[]) => {
     handleAnswer(questionIndex, newOrder.join(','))
   }
-  
-  // Initialize answers for ordering questions that don't have an answer yet
+
   useEffect(() => {
     if (questions.length === 0) return
-    
-    const answerUpdates = []
+    const answerUpdates: { index: number; answer: string }[] = []
     let needsUpdate = false
-    
     questions.forEach((question, index) => {
       if (question.type === 'ordering') {
-        const termIds = question.termIds || []
+        const termIds = question.termIds ?? []
         const currentAnswer = answers[index]
-        
-        // Initialize answer if it doesn't exist or is empty
-        if (!currentAnswer || !currentAnswer.trim()) {
-          if (termIds.length > 0) {
-            const initialAnswer = termIds.join(',')
-            answerUpdates.push({ index, answer: initialAnswer })
-            needsUpdate = true
-          }
+        if (!currentAnswer?.trim() && termIds.length > 0) {
+          answerUpdates.push({ index, answer: termIds.join(',') })
+          needsUpdate = true
         }
       }
     })
-    
-    // Batch all updates: apply all at once to avoid closure issues
     if (needsUpdate && answerUpdates.length > 0) {
-      // Apply all updates - React will batch these since they're in the same effect
       answerUpdates.forEach(({ index, answer }) => {
         onAnswerChange(index, answer)
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [questions]) // Run when questions change
+  }, [questions])
 
-  const renderQuestion = (question, index) => {
+  const renderQuestion = (question: Question, index: number) => {
     const currentAnswer = answers[index]
-
     switch (question.type) {
-      case 'multiple_choice':
-        const questionGrade = question.correctTerm ? getTermGrade(question.correctTerm) : null
+      case 'multiple_choice': {
+        const questionGrade = question.correctTerm
+          ? getTermGrade(question.correctTerm)
+          : null
         return (
           <div key={index} className="all-questions-item">
             <div className="question-number">{index + 1}.</div>
@@ -111,9 +121,11 @@ function QuizAllQuestions({ questions, answers, onAnswerChange, onSubmit, select
             </div>
           </div>
         )
-
-      case 'short_answer':
-        const shortAnswerGrade = question.correctTerm ? getTermGrade(question.correctTerm) : null
+      }
+      case 'short_answer': {
+        const shortAnswerGrade = question.correctTerm
+          ? getTermGrade(question.correctTerm)
+          : null
         return (
           <div key={index} className="all-questions-item">
             <div className="question-number">{index + 1}.</div>
@@ -129,9 +141,9 @@ function QuizAllQuestions({ questions, answers, onAnswerChange, onSubmit, select
             </div>
           </div>
         )
-
-      case 'ordering':
-        const termIds = question.termIds || []
+      }
+      case 'ordering': {
+        const termIds = question.termIds ?? []
         const order = getOrderFromAnswer(currentAnswer, termIds)
         return (
           <div key={index} className="all-questions-item">
@@ -140,7 +152,7 @@ function QuizAllQuestions({ questions, answers, onAnswerChange, onSubmit, select
               <OrderingQuestion
                 question={question}
                 order={order}
-                onOrderChange={(newOrder) => handleOrderChange(index, newOrder)}
+                onOrderChange={newOrder => handleOrderChange(index, newOrder)}
                 questionIndex={index}
                 isDebugMode={isDebugMode}
                 getTermGrade={getTermGrade}
@@ -148,19 +160,22 @@ function QuizAllQuestions({ questions, answers, onAnswerChange, onSubmit, select
             </div>
           </div>
         )
-
+      }
       default:
         return null
     }
   }
 
-  const answeredCount = answers.filter(a => a !== null && a !== '').length
+  const answeredCount = answers.filter(
+    a => a !== null && a !== ''
+  ).length
 
   return (
     <div className="quiz-all-questions">
       <div className="quiz-all-header">
         <div className="progress">
-          Total Questions: {questions.length} | Answered: {answeredCount} / {questions.length}
+          Total Questions: {questions.length} | Answered: {answeredCount} /{' '}
+          {questions.length}
         </div>
       </div>
 
@@ -169,11 +184,7 @@ function QuizAllQuestions({ questions, answers, onAnswerChange, onSubmit, select
       </div>
 
       <div className="quiz-all-footer">
-        <button
-          type="button"
-          onClick={onSubmit}
-          className="submit-button"
-        >
+        <button type="button" onClick={onSubmit} className="submit-button">
           Submit Quiz
         </button>
       </div>
@@ -206,6 +217,3 @@ function QuizAllQuestions({ questions, answers, onAnswerChange, onSubmit, select
     </div>
   )
 }
-
-export default QuizAllQuestions
-

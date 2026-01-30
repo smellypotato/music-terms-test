@@ -1,5 +1,8 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import './QuizSetup.css'
+import questionGenerator from '../services/QuestionGenerator'
+import type { QuizConfig } from '../types'
 
 const ALL_TAGS = [
   'Tempo',
@@ -13,17 +16,18 @@ const ALL_TAGS = [
   'Language'
 ]
 
-function QuizSetup({ onStartQuiz }) {
+export default function QuizSetup() {
+  const navigate = useNavigate()
   const [numQuestions, setNumQuestions] = useState(10)
-  const [selectedTags, setSelectedTags] = useState(ALL_TAGS)
+  const [selectedTags, setSelectedTags] = useState<string[]>(ALL_TAGS)
   const [selectedGrade, setSelectedGrade] = useState(0)
-  const [selectedLevel, setSelectedLevel] = useState('beginner')
+  const [selectedLevel, setSelectedLevel] = useState<
+    'beginner' | 'intermediate' | 'advanced'
+  >('beginner')
 
-  const handleTagToggle = (tag) => {
-    setSelectedTags(prev => 
-      prev.includes(tag)
-        ? prev.filter(t => t !== tag)
-        : [...prev, tag]
+  const handleTagToggle = (tag: string) => {
+    setSelectedTags(prev =>
+      prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
     )
   }
 
@@ -35,7 +39,7 @@ function QuizSetup({ onStartQuiz }) {
     setSelectedTags([])
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (selectedTags.length === 0) {
       alert('Please select at least one tag category.')
@@ -45,35 +49,44 @@ function QuizSetup({ onStartQuiz }) {
       alert('Please enter a number of questions between 1 and 100.')
       return
     }
-    onStartQuiz({ numQuestions, selectedTags, selectedGrade, selectedLevel })
+    const config: QuizConfig = {
+      numQuestions,
+      selectedTags,
+      selectedGrade,
+      selectedLevel
+    }
+    const questions = questionGenerator.generateQuestions(config)
+    navigate('/quiz', { state: { quizConfig: config, questions } })
   }
 
   return (
     <div className="quiz-setup">
       <form onSubmit={handleSubmit} className="setup-form">
         <div className="form-group">
-          <label htmlFor="numQuestions">
-            Number of Questions:
-          </label>
+          <label htmlFor="numQuestions">Number of Questions:</label>
           <input
             id="numQuestions"
             type="number"
-            min="1"
-            max="100"
+            min={1}
+            max={100}
             value={numQuestions}
-            onChange={(e) => setNumQuestions(parseInt(e.target.value) || 1)}
+            onChange={e =>
+              setNumQuestions(parseInt(e.target.value, 10) || 1)
+            }
             className="number-input"
           />
         </div>
 
         <div className="form-group">
-          <label htmlFor="selectedLevel">
-            Level:
-          </label>
+          <label htmlFor="selectedLevel">Level:</label>
           <select
             id="selectedLevel"
             value={selectedLevel}
-            onChange={(e) => setSelectedLevel(e.target.value)}
+            onChange={e =>
+              setSelectedLevel(
+                e.target.value as 'beginner' | 'intermediate' | 'advanced'
+              )
+            }
             className="level-select"
           >
             <option value="beginner">Beginner</option>
@@ -83,13 +96,13 @@ function QuizSetup({ onStartQuiz }) {
         </div>
 
         <div className="form-group">
-          <label htmlFor="selectedGrade">
-            Grade Level:
-          </label>
+          <label htmlFor="selectedGrade">Grade Level:</label>
           <select
             id="selectedGrade"
             value={selectedGrade}
-            onChange={(e) => setSelectedGrade(parseInt(e.target.value))}
+            onChange={e =>
+              setSelectedGrade(parseInt(e.target.value, 10))
+            }
             className="grade-select"
           >
             <option value={0}>All</option>
@@ -140,6 +153,3 @@ function QuizSetup({ onStartQuiz }) {
     </div>
   )
 }
-
-export default QuizSetup
-

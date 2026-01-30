@@ -3,7 +3,7 @@ import './App.css'
 import QuizSetup from './components/QuizSetup'
 import QuizPage from './components/QuizPage'
 
-function App() {
+export default function App() {
   return (
     <div className="app">
       <header className="app-header">
@@ -17,5 +17,3 @@ function App() {
     </div>
   )
 }
-
-export default App

@@ -1,16 +1,27 @@
 import './MultipleChoiceQuestion.css'
 import './QuizAllQuestions.css'
+import type { MultipleChoiceQuestion as MCQuestion } from '../types'
 
-function MultipleChoiceQuestion({ 
-  question, 
-  answer, 
-  onAnswerChange, 
-  questionIndex, 
-  isDebugMode, 
+interface MultipleChoiceQuestionProps {
+  question: MCQuestion
+  answer: string | null
+  onAnswerChange: (questionIndex: number, answer: string) => void
+  questionIndex: number
+  isDebugMode: boolean
+  getOptionGrade: (option: string, question: MCQuestion) => number | null
+  questionGrade: number | null
+}
+
+export default function MultipleChoiceQuestion({
+  question,
+  answer,
+  onAnswerChange,
+  questionIndex,
+  isDebugMode,
   getOptionGrade,
   questionGrade
-}) {
-  const handleChange = (option) => {
+}: MultipleChoiceQuestionProps) {
+  const handleChange = (option: string) => {
     onAnswerChange(questionIndex, option)
   }
 
@@ -34,7 +45,9 @@ function MultipleChoiceQuestion({
                 checked={answer === option}
                 onChange={() => handleChange(option)}
               />
-              <span className="option-letter">{String.fromCharCode(65 + optIndex)}.</span>
+              <span className="option-letter">
+                {String.fromCharCode(65 + optIndex)}.
+              </span>
               <span>{option}</span>
               {isDebugMode && optionGrade !== null && (
                 <span className="debug-grade"> [G{optionGrade}]</span>
@@ -46,5 +59,3 @@ function MultipleChoiceQuestion({
     </div>
   )
 }
-
-export default MultipleChoiceQuestion

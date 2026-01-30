@@ -10,6 +10,9 @@ node_modules/
 /build
 /dist
 
+# Supabase (cloud functions, local config)
+supabase/
+
 # Misc
 .DS_Store
 .env.local

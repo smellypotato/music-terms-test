@@ -1,15 +1,25 @@
 import './ShortAnswerQuestion.css'
 import './QuizAllQuestions.css'
+import type { ShortAnswerQuestion as SAQuestion } from '../types'
 
-function ShortAnswerQuestion({ 
-  question, 
-  answer, 
-  onAnswerChange, 
+interface ShortAnswerQuestionProps {
+  question: SAQuestion
+  answer: string | null
+  onAnswerChange: (questionIndex: number, answer: string) => void
+  questionIndex: number
+  isDebugMode: boolean
+  questionGrade: number | null
+}
+
+export default function ShortAnswerQuestion({
+  question,
+  answer,
+  onAnswerChange,
   questionIndex,
   isDebugMode,
   questionGrade
-}) {
-  const handleChange = (e) => {
+}: ShortAnswerQuestionProps) {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onAnswerChange(questionIndex, e.target.value)
   }
 
@@ -23,7 +33,7 @@ function ShortAnswerQuestion({
       </div>
       <input
         type="text"
-        value={answer || ''}
+        value={answer ?? ''}
         onChange={handleChange}
         className="all-short-answer-input"
         placeholder="Enter your answer..."
@@ -31,5 +41,3 @@ function ShortAnswerQuestion({
     </div>
   )
 }
-
-export default ShortAnswerQuestion
