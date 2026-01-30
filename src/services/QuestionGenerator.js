@@ -68,6 +68,10 @@ class QuestionGenerator {
 
     // Get applicable question formats based on selected tags and level
     const applicableFormats = this.questionFormats.filter(format => {
+      // Check if format is enabled
+      if (format.enabled === false) {
+        return false
+      }
       // First, check if the format's type is allowed for the selected level
       if (!allowedQuestionTypes.includes(format.type)) {
         return false
