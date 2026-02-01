@@ -1,0 +1,103 @@
+ .profile-page {
+   display: flex;
+   justify-content: center;
+   padding: 20px 0;
+ }
+ 
+ .profile-card {
+   width: min(720px, 100%);
+   background: white;
+   border-radius: 16px;
+   padding: 32px;
+   box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15);
+ }
+ 
+ .profile-card h1 {
+   margin-bottom: 20px;
+ }
+ 
+ .profile-row {
+   display: flex;
+   justify-content: space-between;
+   gap: 16px;
+   padding: 12px 0;
+   border-bottom: 1px solid #eef1f5;
+ }
+ 
+ .profile-row-inline {
+   border-bottom: none;
+   align-items: center;
+ }
+ 
+ .profile-label {
+   font-weight: 600;
+   color: #475569;
+ }
+ 
+ .profile-value {
+   color: #0f172a;
+ }
+ 
+ .profile-section {
+   margin-top: 24px;
+ }
+ 
+ .profile-section h2 {
+   margin-bottom: 12px;
+ }
+ 
+ .profile-input {
+   flex: 1;
+   padding: 10px 12px;
+   border-radius: 8px;
+   border: 1px solid #cbd5f5;
+   font-size: 0.95rem;
+ }
+ 
+ .profile-button {
+   padding: 10px 16px;
+   border-radius: 8px;
+   border: none;
+   background: #667eea;
+   color: white;
+   font-weight: 600;
+   cursor: pointer;
+ }
+ 
+ .profile-button.secondary {
+   background: #e2e8f0;
+   color: #334155;
+ }
+ 
+ .profile-button:disabled {
+   opacity: 0.6;
+   cursor: not-allowed;
+ }
+ 
+ .profile-invite {
+   margin-top: 12px;
+   background: #f8fafc;
+   border-radius: 10px;
+   padding: 12px;
+ }
+ 
+ .profile-invite-code {
+   font-family: 'SFMono-Regular', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+   font-size: 1.1rem;
+   letter-spacing: 0.08em;
+ }
+ 
+ .profile-invite-meta {
+   margin-top: 6px;
+   font-size: 0.85rem;
+   color: #64748b;
+ }
+ 
+ .profile-status {
+   margin-top: 16px;
+   color: #0f172a;
+ }
+ 
+ .profile-error {
+   color: #dc2626;
+ }

@@ -1,0 +1,75 @@
+.auth-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.auth-bar-loading {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.95rem;
+}
+
+.auth-bar-welcome {
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.auth-bar-btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.auth-bar-btn-login {
+  background: transparent;
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+}
+
+.auth-bar-btn-login:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: white;
+}
+
+.auth-bar-btn-signup {
+  background: white;
+  color: #667eea;
+  border: 2px solid white;
+}
+
+.auth-bar-btn-signup:hover {
+  background: rgba(255, 255, 255, 0.95);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.auth-bar-btn-profile {
+  background: transparent;
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+}
+
+.auth-bar-btn-profile:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: white;
+}
+
+.auth-bar-btn-logout {
+  background: transparent;
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  font: inherit;
+}
+
+.auth-bar-btn-logout:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: white;
+}
